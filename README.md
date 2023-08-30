@@ -1,0 +1,1 @@
+# lgtm-kinako-api
