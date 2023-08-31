@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"fmt"
 	"lgtm-kinako-api/model"
 
 	"gorm.io/gorm"
@@ -9,6 +10,7 @@ import (
 type IAlbumRepository interface {
 	GetAllAlbums(albums *[]model.Album) error
 	CreateAlbum(task *model.Album) error
+	DeleteAlbum(userId uint, albumId uint) error
 }
 
 type albumRepository struct {
@@ -29,6 +31,17 @@ func (ar *albumRepository) GetAllAlbums(albums *[]model.Album) error {
 func (ar *albumRepository) CreateAlbum(album *model.Album) error {
 	if err := ar.db.Create(album).Error; err != nil {
 		return err
+	}
+	return nil
+}
+
+func (tr *albumRepository) DeleteAlbum(userId uint, albumId uint) error {
+	result := tr.db.Where("id=? AND user_id=?", albumId, userId).Delete(&model.Album{})
+	if result.Error != nil {
+		return result.Error
+	}
+	if result.RowsAffected < 1 {
+		return fmt.Errorf("object does not exist")
 	}
 	return nil
 }

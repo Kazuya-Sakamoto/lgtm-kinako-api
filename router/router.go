@@ -5,17 +5,13 @@ import (
 	"net/http"
 	"os"
 
+	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )
 
 func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *echo.Echo {
 	e := echo.New()
-
-	a := e.Group("/album")
-	a.GET("", ac.GetAllAlbums)
-	a.POST("", ac.CreateAlbum)
-
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
@@ -34,6 +30,15 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *e
 	e.POST("/signup", uc.SignUp)
 	e.POST("/login", uc.LogIn)
 	e.GET("/csrf", uc.CsrfToken)
+
+	a := e.Group("/album")
+	a.GET("", ac.GetAllAlbums)
+	a.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
+	a.POST("", ac.CreateAlbum)
+	a.DELETE("/:albumId", ac.DeleteAlbum)
 
 	return e
 }

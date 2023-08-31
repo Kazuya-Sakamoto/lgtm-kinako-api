@@ -8,6 +8,7 @@ import (
 type IAlbumUsecase interface {
 	GetAllAlbums() ([]model.AlbumResponse, error)
 	CreateAlbum(task model.Album) (model.AlbumResponse, error)
+	DeleteAlbum(userId uint, albumId uint) error
 }
 
 type albumUsecase struct {
@@ -43,9 +44,17 @@ func (au *albumUsecase) CreateAlbum(album model.Album) (model.AlbumResponse, err
 	res := model.AlbumResponse{
 		ID:          album.ID,
 		Title:       album.Title,
+		Image: 		 album.Image,
 		CreatedAt:   album.CreatedAt,
 		UpdatedAt:   album.UpdatedAt,
 	}
 
 	return res, nil
+}
+
+func (au *albumUsecase) DeleteAlbum(userId uint, albumId uint) error {
+	if err := au.ar.DeleteAlbum(userId, albumId); err != nil {
+		return err
+	}
+	return nil
 }

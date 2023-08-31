@@ -4,6 +4,7 @@ import (
 	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/usecase"
 	"net/http"
+	"strconv"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -12,6 +13,7 @@ import (
 type IAlbumController interface {
 	GetAllAlbums(c echo.Context) error
 	CreateAlbum(c echo.Context) error
+	DeleteAlbum(c echo.Context) error
 }
 
 type albumController struct {
@@ -46,4 +48,18 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusCreated, res)
+}
+
+func (ac *albumController) DeleteAlbum(c echo.Context) error {
+	user := c.Get("user").(*jwt.Token)
+	claims := user.Claims.(jwt.MapClaims)
+	userId := claims["user_id"]
+	id := c.Param("albumId")
+	albumId, _ := strconv.Atoi(id)
+
+	err := ac.au.DeleteAlbum(uint(userId.(float64)), uint(albumId))
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.NoContent(http.StatusNoContent)
 }
