@@ -7,6 +7,7 @@ import (
 
 type IAlbumUsecase interface {
 	GetAllAlbums() ([]model.AlbumResponse, error)
+	GetRandomAlbums() ([]model.AlbumResponse, error)
 	CreateAlbum(task model.Album) (model.AlbumResponse, error)
 	DeleteAlbum(userId uint, albumId uint) error
 }
@@ -29,6 +30,26 @@ func (au *albumUsecase) GetAllAlbums() ([]model.AlbumResponse, error) {
 		a := model.AlbumResponse{
 			ID:          v.ID,
 			Title:       v.Title,
+			Image: 		   v.Image,
+			CreatedAt:   v.CreatedAt,
+			UpdatedAt:   v.UpdatedAt,
+		}
+		res = append(res, a)
+	}
+	return res, nil
+}
+
+func (au *albumUsecase) GetRandomAlbums() ([]model.AlbumResponse, error) {
+	albums := []model.Album{}
+	if err := au.ar.GetRandomAlbums(&albums); err != nil {
+		return nil, err
+	}
+	res := []model.AlbumResponse{}
+	for _, v := range albums {
+		a := model.AlbumResponse{
+			ID:          v.ID,
+			Title:       v.Title,
+			Image: 		   v.Image,
 			CreatedAt:   v.CreatedAt,
 			UpdatedAt:   v.UpdatedAt,
 		}

@@ -9,6 +9,7 @@ import (
 
 type IAlbumRepository interface {
 	GetAllAlbums(albums *[]model.Album) error
+	GetRandomAlbums(albums *[]model.Album) error
 	CreateAlbum(task *model.Album) error
 	DeleteAlbum(userId uint, albumId uint) error
 }
@@ -24,6 +25,13 @@ func NewAlbumRepository(db *gorm.DB) IAlbumRepository {
 func (ar *albumRepository) GetAllAlbums(albums *[]model.Album) error {
 	if err := ar.db.Order("created_at").Find(albums).Error; err != nil {
 		return err
+	}
+	return nil
+}
+
+func (ar *albumRepository) GetRandomAlbums(albums *[]model.Album) error {
+	if err := ar.db.Order("RANDOM()").Limit(12).Find(albums).Error; err != nil {
+			return err
 	}
 	return nil
 }

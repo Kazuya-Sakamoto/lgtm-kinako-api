@@ -57,7 +57,7 @@ func (uc *userController) LogIn(c echo.Context) error {
 	cookie.HttpOnly = true
 	cookie.SameSite = http.SameSiteNoneMode
 	c.SetCookie(cookie)
-	return c.NoContent(http.StatusOK)
+	return c.JSON(http.StatusOK, tokenString)
 }
 
 func (uc *userController) CsrfToken(c echo.Context) error {

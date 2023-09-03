@@ -12,6 +12,7 @@ import (
 
 type IAlbumController interface {
 	GetAllAlbums(c echo.Context) error
+	GetRandomAlbums(c echo.Context) error
 	CreateAlbum(c echo.Context) error
 	DeleteAlbum(c echo.Context) error
 }
@@ -31,6 +32,15 @@ func (ac *albumController) GetAllAlbums(c echo.Context) error {
 	}
 	return c.JSON(http.StatusOK, res)
 }
+
+func (ac *albumController) GetRandomAlbums(c echo.Context) error {
+	res, err := ac.au.GetRandomAlbums()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusOK, res)
+}
+
 
 func (ac *albumController) CreateAlbum(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)

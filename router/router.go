@@ -33,6 +33,7 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *e
 
 	a := e.Group("/album")
 	a.GET("", ac.GetAllAlbums)
+	a.GET("/random", ac.GetRandomAlbums)
 	a.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
