@@ -6,15 +6,16 @@ import (
 	"errors"
 	"fmt"
 	"image"
-	"image/color"
-	"image/png"
 	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/usecase"
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
-	"github.com/fogleman/gg"
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -53,6 +54,21 @@ func (ac *albumController) GetRandomAlbums(c echo.Context) error {
 
 
 func (ac *albumController) CreateAlbum(c echo.Context) error {
+
+    // AWSセッションを作成
+    // デフォルトのAWS設定ファイル（~/.aws/credentials）から認証情報を読み込む
+    // 指定のプロファイルを使用する場合は、第二引数にプロファイル名を指定します
+    sess, err := session.NewSessionWithOptions(session.Options{
+        SharedConfigState: session.SharedConfigEnable,
+        Profile:           "kinako-lgtm", 
+    })
+    if err != nil {
+        panic(err)
+    }
+
+    // S3クライアントを作成
+    svc := s3.New(sess)
+
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["user_id"]
@@ -93,7 +109,7 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
     reader := bytes.NewReader(data)
 
     // JPEG形式の画像としてデコード
-    decodedImage, format, err := image.Decode(reader)
+    _, format, err := image.Decode(reader)
     if err != nil {
         fmt.Println("画像デコードエラー:", err)
         return c.JSON(http.StatusBadRequest, "Unsupported image format")
@@ -107,13 +123,32 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 
     fmt.Println("画像が正常にデコードされました。")
 
-    // 画像を加工してBase64エンコード
-	targetHeight := 15.0 // 15センチの高さを目指す
+    // FIXME: 画像を加工してBase64エンコード（一時的に無効にする場合はここをコメントアウト）
+    /*
+    targetHeight := 15.0 // 15センチの高さを目指す
     encodedImage, err := processImage(decodedImage, targetHeight)
     if err != nil {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }
     album.Image = encodedImage
+    */
+
+    // イメージファイルの名前を作成（現在の日付と時間を使用）
+    currentDateTime := time.Now().Format("20060102150405") // YYYYMMDDHHMMSS 形式
+    imageFileName := currentDateTime + ".JPG"
+
+	// アップロードする画像データ
+	encodedImage := data // 画像加工を無効にした場合は "data" に変更
+	_, err = svc.PutObject(&s3.PutObjectInput{
+		Bucket:      aws.String("lgtm-kinako"),          	// バケット名を指定
+		Key:         aws.String(imageFileName),          	// 保存するS3キーを指定
+		Body:        bytes.NewReader([]byte(encodedImage)), // encodedImageをバイトスライスに変換して指定
+		ContentType: aws.String("image/jpeg"),        		// Content-Typeを指定
+	})
+	if err != nil {
+		panic(err)
+	}
+	fmt.Println("画像をS3に保存しました。")
 
     res, err := ac.au.CreateAlbum(album)
     if err != nil {
@@ -136,37 +171,37 @@ func detectMimeType(data string) (string, error) {
 	return mimeType, nil
 }
 
-func processImage(inputImage image.Image, targetHeight float64) (string, error) {
-	// 画像にテキストを追加
-	dc := gg.NewContextForImage(inputImage)
-	dc.SetColor(color.White)
+// func processImage(inputImage image.Image, targetHeight float64) (string, error) {
+// 	// 画像にテキストを追加
+// 	dc := gg.NewContextForImage(inputImage)
+// 	dc.SetColor(color.White)
 
-	// テキストのフォントサイズを5倍に設定
-	fontSize := targetHeight * 4.8
-	if err := dc.LoadFontFace("38LSUDGothic-Bold.ttf", fontSize); err != nil {
-			fmt.Println("フォントを読み込めませんでした:", err)
-			return "", err
-	}
+// 	// テキストのフォントサイズを5倍に設定
+// 	fontSize := targetHeight * 4.8
+// 	if err := dc.LoadFontFace("38LSUDGothic-Bold.ttf", fontSize); err != nil {
+// 			fmt.Println("フォントを読み込めませんでした:", err)
+// 			return "", err
+// 	}
 
-	// テキストを左上の固定位置に配置
-	x := 20.0 // 画像の左端からの距離（20px）
-	y := (float64(dc.Height()) - fontSize) / 2
+// 	// テキストを左上の固定位置に配置
+// 	x := 20.0 // 画像の左端からの距離（20px）
+// 	y := (float64(dc.Height()) - fontSize) / 2
 
-	// テキストを配置
-	dc.DrawStringAnchored("LGTM-kinako", x, y, 0, 0.5)
+// 	// テキストを配置
+// 	dc.DrawStringAnchored("LGTM-kinako", x, y, 0, 0.5)
 
-	// 加工した画像をバッファに書き込む
-	var buffer bytes.Buffer
-	if err := png.Encode(&buffer, dc.Image()); err != nil {
-			fmt.Println("error3")
-			return "", err
-	}
+// 	// 加工した画像をバッファに書き込む
+// 	var buffer bytes.Buffer
+// 	if err := png.Encode(&buffer, dc.Image()); err != nil {
+// 			fmt.Println("error3")
+// 			return "", err
+// 	}
 
-	// バッファからBase64エンコードされた文字列に変換
-	encodedImage := base64.StdEncoding.EncodeToString(buffer.Bytes())
+// 	// バッファからBase64エンコードされた文字列に変換
+// 	encodedImage := base64.StdEncoding.EncodeToString(buffer.Bytes())
 
-	return encodedImage, nil
-}
+// 	return encodedImage, nil
+// }
 
 
 func (ac *albumController) DeleteAlbum(c echo.Context) error {
