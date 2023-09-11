@@ -13,7 +13,11 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+	"time"
 
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 	"github.com/fogleman/gg"
 
 	"github.com/golang-jwt/jwt/v4"
@@ -53,6 +57,21 @@ func (ac *albumController) GetRandomAlbums(c echo.Context) error {
 
 
 func (ac *albumController) CreateAlbum(c echo.Context) error {
+	const s3BaseURL = "https://lgtm-kinako.s3.ap-northeast-1.amazonaws.com/"
+    // AWSセッションを作成
+    // デフォルトのAWS設定ファイル（~/.aws/credentials）から認証情報を読み込む
+    // 指定のプロファイルを使用する場合は、第二引数にプロファイル名を指定します
+    sess, err := session.NewSessionWithOptions(session.Options{
+        SharedConfigState: session.SharedConfigEnable,
+        Profile:           "kinako-lgtm", 
+    })
+    if err != nil {
+        panic(err)
+    }
+
+    // S3クライアントを作成
+    svc := s3.New(sess)
+
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["user_id"]
@@ -89,32 +108,48 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
         return c.JSON(http.StatusBadRequest, "Unsupported image format")
     }
 
-    // デコードしたデータをバイトのストリームとして読み込む
+	// デコードしたデータをバイトのストリームとして読み込む
     reader := bytes.NewReader(data)
 
-    // JPEG形式の画像としてデコード
-    decodedImage, format, err := image.Decode(reader)
-    if err != nil {
-        fmt.Println("画像デコードエラー:", err)
-        return c.JSON(http.StatusBadRequest, "Unsupported image format")
-    }
+	// JPEG形式の画像としてデコード
+	decodedImage, format, err := image.Decode(reader)
+	if err != nil {
+		fmt.Println("画像デコードエラー:", err)
+		return c.JSON(http.StatusBadRequest, "Unsupported image format")
+	}
 
-    // フォーマットがJPEGであるか確認
-    if format != "jpeg" {
-        fmt.Println("無効な画像フォーマット:", format)
-        return c.JSON(http.StatusBadRequest, "Unsupported image format")
-    }
+	// フォーマットがJPEGであるか確認
+	if format != "jpeg" {
+		fmt.Println("無効な画像フォーマット:", format)
+		return c.JSON(http.StatusBadRequest, "Unsupported image format")
+	}
 
-    fmt.Println("画像が正常にデコードされました。")
 
-    // 画像を加工してBase64エンコード
-	targetHeight := 15.0 // 15センチの高さを目指す
-    encodedImage, err := processImage(decodedImage, targetHeight)
+    // イメージファイルの名前を作成（現在の日付と時間を使用）
+    currentDateTime := time.Now().Format("20060102150405") // YYYYMMDDHHMMSS 形式
+    imageFileName := currentDateTime + ".JPG"
+
+    // アップロードする画像データ
+    encodedImage, err := processImage(decodedImage, 15.0)
     if err != nil {
         return c.JSON(http.StatusInternalServerError, err.Error())
     }
-    album.Image = encodedImage
 
+    // S3にアップロード
+    _, err = svc.PutObject(&s3.PutObjectInput{
+        Bucket:      aws.String("lgtm-kinako"),           	// バケット名を指定
+        Key:         aws.String(imageFileName),           	// 保存するS3キーを指定
+        Body:        bytes.NewReader([]byte(encodedImage)), // encodedImageをバイトスライスに変換して指定
+        ContentType: aws.String("image/jpeg"),        		// Content-Typeを指定
+    })
+    if err != nil {
+        panic(err)
+    }
+    fmt.Println("画像をS3に保存しました。")
+
+    // 保存された画像のオブジェクト URL を生成
+	objectURL := s3BaseURL + imageFileName
+    album.Image = objectURL
     res, err := ac.au.CreateAlbum(album)
     if err != nil {
         return c.JSON(http.StatusInternalServerError, err.Error())
@@ -136,7 +171,7 @@ func detectMimeType(data string) (string, error) {
 	return mimeType, nil
 }
 
-func processImage(inputImage image.Image, targetHeight float64) (string, error) {
+func processImage(inputImage image.Image, targetHeight float64) ([]byte, error) {
 	// 画像にテキストを追加
 	dc := gg.NewContextForImage(inputImage)
 	dc.SetColor(color.White)
@@ -144,8 +179,8 @@ func processImage(inputImage image.Image, targetHeight float64) (string, error) 
 	// テキストのフォントサイズを5倍に設定
 	fontSize := targetHeight * 4.8
 	if err := dc.LoadFontFace("38LSUDGothic-Bold.ttf", fontSize); err != nil {
-			fmt.Println("フォントを読み込めませんでした:", err)
-			return "", err
+		fmt.Println("フォントを読み込めませんでした:", err)
+		return nil, err
 	}
 
 	// テキストを左上の固定位置に配置
@@ -158,14 +193,12 @@ func processImage(inputImage image.Image, targetHeight float64) (string, error) 
 	// 加工した画像をバッファに書き込む
 	var buffer bytes.Buffer
 	if err := png.Encode(&buffer, dc.Image()); err != nil {
-			fmt.Println("error3")
-			return "", err
+		fmt.Println("error3")
+		return nil, err
 	}
 
-	// バッファからBase64エンコードされた文字列に変換
-	encodedImage := base64.StdEncoding.EncodeToString(buffer.Bytes())
-
-	return encodedImage, nil
+	// バッファの内容を []byte として返す
+	return buffer.Bytes(), nil
 }
 
 
