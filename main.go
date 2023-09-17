@@ -20,8 +20,9 @@ func main() {
 	// ! Usecase
 	albumUsecase := usecase.NewAlbumUsecase(albumRepository, albumHandler)
 	userUsecase := usecase.NewUserUsecase(userRepository, userHandler)
+	imageProcessorUsecase := usecase.NewImageProcessor()
 	// ! Controller
-	albumController := controller.NewAlbumController(albumUsecase)
+	albumController := controller.NewAlbumController(albumUsecase, imageProcessorUsecase)
 	userController := controller.NewUserController(userUsecase)
 
 	e := router.NewRouter(albumController, userController)
