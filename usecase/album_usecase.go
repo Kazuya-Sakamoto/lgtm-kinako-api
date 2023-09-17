@@ -1,6 +1,7 @@
 package usecase
 
 import (
+	"lgtm-kinako-api/handler"
 	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 )
@@ -14,10 +15,11 @@ type IAlbumUsecase interface {
 
 type albumUsecase struct {
 	ar repository.IAlbumRepository
+	ah handler.IAlbumHandler
 }
 
-func NewAlbumUsecase(ar repository.IAlbumRepository) IAlbumUsecase {
-	return &albumUsecase{ar}
+func NewAlbumUsecase(ar repository.IAlbumRepository, ah handler.IAlbumHandler) IAlbumUsecase {
+	return &albumUsecase{ar, ah}
 }
 
 func (au *albumUsecase) GetAllAlbums() ([]model.AlbumResponse, error) {
@@ -59,6 +61,9 @@ func (au *albumUsecase) GetRandomAlbums() ([]model.AlbumResponse, error) {
 }
 
 func (au *albumUsecase) CreateAlbum(album model.Album) (model.AlbumResponse, error) {
+	if err := au.ah.AlbumHandler(album); err != nil {
+		return model.AlbumResponse{}, err
+	}
 	if err := au.ar.CreateAlbum(&album); err != nil {
 		return model.AlbumResponse{}, err
 	}
