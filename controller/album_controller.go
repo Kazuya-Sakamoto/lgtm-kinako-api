@@ -10,11 +10,6 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
-
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -29,10 +24,11 @@ type IAlbumController interface {
 
 type albumController struct {
 	au usecase.IAlbumUsecase
+	ipu usecase.IImageProcessorUsecase
 }
 
-func NewAlbumController(au usecase.IAlbumUsecase) IAlbumController {
-	return &albumController{au}
+func NewAlbumController(au usecase.IAlbumUsecase, ipu usecase.IImageProcessorUsecase) IAlbumController {
+	return &albumController{au, ipu}
 }
 
 func (ac *albumController) GetAllAlbums(c echo.Context) error {
@@ -53,21 +49,6 @@ func (ac *albumController) GetRandomAlbums(c echo.Context) error {
 
 
 func (ac *albumController) CreateAlbum(c echo.Context) error {
-	const s3BaseURL = "https://lgtm-kinako.s3.ap-northeast-1.amazonaws.com/"
-    // AWSセッションを作成
-    // デフォルトのAWS設定ファイル（~/.aws/credentials）から認証情報を読み込む
-    // 指定のプロファイルを使用する場合は、第二引数にプロファイル名を指定します
-    sess, err := session.NewSessionWithOptions(session.Options{
-        SharedConfigState: session.SharedConfigEnable,
-        Profile:           "kinako-lgtm", 
-    })
-    if err != nil {
-        panic(err)
-    }
-
-    // S3クライアントを作成
-    svc := s3.New(sess)
-
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["user_id"]
@@ -78,73 +59,49 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 	album.UserId = uint(userId.(float64))
 
 	imageData := album.Image
-	mimeType, err := detectMimeType(imageData)
+	mimeType, err := ac.ipu.DetectMimeType(imageData)
 	if err != nil {
-		fmt.Println("error100")
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-
 	// MIMEタイプごとに処理を分岐
 	if strings.HasPrefix(mimeType, "data:image/jpeg") {
-		// JPEG形式の画像データの処理
 		// imageDataから"data:image/jpeg;base64,"の部分を削除
 		imageData = strings.TrimPrefix(imageData, "data:image/jpeg;base64,")
 	} else if strings.HasPrefix(mimeType, "data:image/png") {
-		// PNG形式の画像データの処理
 		// imageDataから"data:image/png;base64,"の部分を削除
 		imageData = strings.TrimPrefix(imageData, "data:image/png;base64,")
 	} else {
-		return c.JSON(http.StatusBadRequest, "Unsupported image format")
+		return c.JSON(http.StatusBadRequest, "Unsupported image format: jpegでもpngでもありません")
 	}
 
-    // Base64デコード
-    data, err := base64.StdEncoding.DecodeString(imageData)
-    if err != nil {
-        fmt.Println("Base64デコードエラー:", err)
-        return c.JSON(http.StatusBadRequest, "Unsupported image format")
-    }
+	// Base64デコード
+	data, err := base64.StdEncoding.DecodeString(imageData)
+	if err != nil {
+		fmt.Println("Base64デコードエラー:", err)
+		return c.JSON(http.StatusBadRequest, "Unsupported image format: Base64デコードエラー")
+	}
 
 	// デコードしたデータをバイトのストリームとして読み込む
-    reader := bytes.NewReader(data)
+	reader := bytes.NewReader(data)
 
-	// JPEG形式の画像としてデコード
 	decodedImage, format, err := image.Decode(reader)
 	if err != nil {
-		fmt.Println("画像デコードエラー:", err)
-		return c.JSON(http.StatusBadRequest, "Unsupported image format")
+		return c.JSON(http.StatusBadRequest, "Unsupported image format: 画像をデコードできません")
 	}
-
-	// フォーマットがJPEGであるか確認
 	if format != "jpeg" {
-		fmt.Println("無効な画像フォーマット:", format)
-		return c.JSON(http.StatusBadRequest, "Unsupported image format")
+		return c.JSON(http.StatusBadRequest, "Unsupported image format: フォーマットがJPEGではありません")
 	}
 
-
-    // イメージファイルの名前を作成（現在の日付と時間を使用）
-    currentDateTime := time.Now().Format("20060102150405") // YYYYMMDDHHMMSS 形式
-    imageFileName := currentDateTime + ".JPG"
-
-    // アップロードする画像データ
-	encodedImage, err := processImage(decodedImage, 15.0)
+	// アップロードする画像データ
+	encodedImage, err := ac.ipu.ProcessImage(decodedImage, 15.0)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-
-    // S3にアップロード
-    _, err = svc.PutObject(&s3.PutObjectInput{
-        Bucket:      aws.String("lgtm-kinako"),           	// バケット名を指定
-        Key:         aws.String(imageFileName),           	// 保存するS3キーを指定
-        Body:        bytes.NewReader([]byte(encodedImage)), // encodedImageをバイトスライスに変換して指定
-        ContentType: aws.String("image/jpeg"),        		// Content-Typeを指定
-    })
-    if err != nil {
-        panic(err)
-    }
-    fmt.Println("画像をS3に保存しました。")
-
-    // 保存された画像のオブジェクト URL を生成
-	objectURL := s3BaseURL + imageFileName
+	// 画像をS3にアップロードし、オブジェクトURLを取得
+	objectURL, err := ac.au.UploadImageToS3(encodedImage)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
     album.Image = objectURL
     res, err := ac.au.CreateAlbum(album)
     if err != nil {

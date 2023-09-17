@@ -1,15 +1,23 @@
 package usecase
 
 import (
+	"bytes"
+	"fmt"
 	"lgtm-kinako-api/handler"
 	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
+	"time"
+
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/session"
+	"github.com/aws/aws-sdk-go/service/s3"
 )
 
 type IAlbumUsecase interface {
 	GetAllAlbums() ([]model.AlbumResponse, error)
 	GetRandomAlbums() ([]model.AlbumResponse, error)
-	CreateAlbum(task model.Album) (model.AlbumResponse, error)
+	CreateAlbum(album model.Album) (model.AlbumResponse, error)
+	UploadImageToS3(encodedImage []byte) (string, error)
 	DeleteAlbum(userId uint, albumId uint) error
 }
 
@@ -76,6 +84,32 @@ func (au *albumUsecase) CreateAlbum(album model.Album) (model.AlbumResponse, err
 	}
 
 	return res, nil
+}
+func (au *albumUsecase) UploadImageToS3(encodedImage []byte) (string, error) {
+	const s3BaseURL = "https://lgtm-kinako.s3.ap-northeast-1.amazonaws.com/"
+    sess, err := session.NewSessionWithOptions(session.Options{
+        SharedConfigState: session.SharedConfigEnable,
+        Profile:           "kinako-lgtm", 
+    })
+    if err != nil {
+        panic(err)
+    }
+    svc := s3.New(sess)
+	currentDateTime := time.Now().Format("20060102150405")
+	imageFileName := currentDateTime + ".JPG"
+	// S3にアップロード
+    _, err = svc.PutObject(&s3.PutObjectInput{
+        Bucket:      aws.String("lgtm-kinako"),           	
+        Key:         aws.String(imageFileName),           	
+        Body:        bytes.NewReader([]byte(encodedImage)), 
+        ContentType: aws.String("image/jpeg"),        		
+    })
+	if err != nil {
+		panic(err)
+	}
+	objectURL := s3BaseURL + imageFileName
+	fmt.Println("S3にアップロードが完了")
+	return objectURL, nil
 }
 
 func (au *albumUsecase) DeleteAlbum(userId uint, albumId uint) error {
