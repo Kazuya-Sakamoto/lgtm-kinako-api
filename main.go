@@ -3,6 +3,7 @@ package main
 import (
 	"lgtm-kinako-api/controller"
 	"lgtm-kinako-api/db"
+	"lgtm-kinako-api/handler"
 	"lgtm-kinako-api/repository"
 	"lgtm-kinako-api/router"
 	"lgtm-kinako-api/usecase"
@@ -10,13 +11,19 @@ import (
 
 func main() {
 	db := db.NewDB()
-	alubmRepository := repository.NewAlbumRepository(db)
+	//! Handler
+	userHandler := handler.NewUserHandler()
+	albumHandler := handler.NewAlbumHandler()
+	// ! Repository
+	albumRepository := repository.NewAlbumRepository(db)
 	userRepository := repository.NewUserRepository(db)
-	alubmUsecase := usecase.NewAlbumUsecase(alubmRepository)
-	userUsecase := usecase.NewUserUsecase(userRepository)
-	alubmController := controller.NewAlbumController(alubmUsecase)
+	// ! Usecase
+	albumUsecase := usecase.NewAlbumUsecase(albumRepository, albumHandler)
+	userUsecase := usecase.NewUserUsecase(userRepository, userHandler)
+	// ! Controller
+	albumController := controller.NewAlbumController(albumUsecase)
 	userController := controller.NewUserController(userUsecase)
 
-	e := router.NewRouter(alubmController, userController)
+	e := router.NewRouter(albumController, userController)
 	e.Logger.Fatal(e.Start(":8080"))
 }
