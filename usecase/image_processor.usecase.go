@@ -28,14 +28,17 @@ func (ip *imageProcessorUsecase) ProcessImage(inputImage image.Image, targetHeig
 	dc.SetColor(color.White)
 
 	fontSize := targetHeight * 4.8
-	if err := dc.LoadFontFace("38LSUDGothic-Bold.ttf", fontSize); err != nil {
+	if err := dc.LoadFontFace("Vibur-Regular.ttf", fontSize); err != nil {
 		fmt.Println("フォントを読み込めませんでした:", err)
 		return nil, err
 	}
 
-	x := 20.0
-	y := (float64(dc.Height()) - fontSize) / 2
-	dc.DrawStringAnchored("LGTM-kinako", x, y, 0, 0.5)
+	text := "LGTM-kinako"
+	textWidth, textHeight := dc.MeasureString(text)
+	x := (float64(dc.Width()) - textWidth) / 2
+	y := (float64(dc.Height()) - textHeight) / 2
+
+	dc.DrawStringAnchored(text, x, y, 0, 0.5)
 
 	var buffer bytes.Buffer
 	if err := png.Encode(&buffer, dc.Image()); err != nil {
