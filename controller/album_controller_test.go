@@ -47,7 +47,7 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
 			assert.Equal(t, expected.Title, albums[i].Title, "Unexpected album title at index", i)
 			assert.Equal(t, expected.Image, albums[i].Image, "Unexpected album image at index", i)
 		
-			// 時間に依存しないCreatedAtおよびUpdatedAtフィールドの比較
+			//* 時間に依存しないCreatedAtおよびUpdatedAtフィールドの比較
 			assert.True(t, expected.CreatedAt.Equal(albums[i].CreatedAt), "Unexpected album CreatedAt at index", i)
 			assert.True(t, expected.UpdatedAt.Equal(albums[i].UpdatedAt), "Unexpected album UpdatedAt at index", i)
 		}

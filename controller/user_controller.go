@@ -42,22 +42,13 @@ func (uc *userController) LogIn(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	tokenString, err := uc.uu.Login(user)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
+    tokenString, err := uc.uu.Login(user)
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
+    setTokenCookie(c, tokenString)
 
-	cookie := new(http.Cookie)
-	cookie.Name = "token"
-	cookie.Value = tokenString
-	cookie.Expires = time.Now().Add(24 * time.Hour)
-	cookie.Path = "/"
-	cookie.Domain = os.Getenv("API_DOMAIN")
-	cookie.Secure = true
-	cookie.HttpOnly = true
-	cookie.SameSite = http.SameSiteNoneMode
-	c.SetCookie(cookie)
-	return c.JSON(http.StatusOK, tokenString)
+    return c.JSON(http.StatusOK, tokenString)
 }
 
 func (uc *userController) CsrfToken(c echo.Context) error {
@@ -65,4 +56,17 @@ func (uc *userController) CsrfToken(c echo.Context) error {
 	return c.JSON(http.StatusOK, echo.Map{
 		"csrf_token": token,
 	})
+}
+
+func setTokenCookie(c echo.Context, tokenString string) {
+    cookie := new(http.Cookie)
+    cookie.Name = "token"
+    cookie.Value = tokenString
+    cookie.Expires = time.Now().Add(24 * time.Hour)
+    cookie.Path = "/"
+    cookie.Domain = os.Getenv("API_DOMAIN")
+    cookie.Secure = true
+    cookie.HttpOnly = true
+    cookie.SameSite = http.SameSiteNoneMode
+    c.SetCookie(cookie)
 }

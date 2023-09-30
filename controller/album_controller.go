@@ -63,25 +63,25 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}
-	// MIMEタイプごとに処理を分岐
+	//* MIMEタイプごとに処理を分岐
 	if strings.HasPrefix(mimeType, "data:image/jpeg") {
-		// imageDataから"data:image/jpeg;base64,"の部分を削除
+		//* imageDataから"data:image/jpeg;base64,"の部分を削除
 		imageData = strings.TrimPrefix(imageData, "data:image/jpeg;base64,")
 	} else if strings.HasPrefix(mimeType, "data:image/png") {
-		// imageDataから"data:image/png;base64,"の部分を削除
+		//* imageDataから"data:image/png;base64,"の部分を削除
 		imageData = strings.TrimPrefix(imageData, "data:image/png;base64,")
 	} else {
 		return c.JSON(http.StatusBadRequest, "Unsupported image format: jpegでもpngでもありません")
 	}
 
-	// Base64デコード
+	//* Base64デコード
 	data, err := base64.StdEncoding.DecodeString(imageData)
 	if err != nil {
 		fmt.Println("Base64デコードエラー:", err)
 		return c.JSON(http.StatusBadRequest, "Unsupported image format: Base64デコードエラー")
 	}
 
-	// デコードしたデータをバイトのストリームとして読み込む
+	//* デコードしたデータをバイトのストリームとして読み込む
 	reader := bytes.NewReader(data)
 
 	decodedImage, format, err := image.Decode(reader)
@@ -92,12 +92,12 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Unsupported image format: フォーマットがJPEGではありません")
 	}
 
-	// アップロードする画像データ
+	//* アップロードする画像データ
 	encodedImage, err := ac.ipu.ProcessImage(decodedImage, 15.0)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-	// 画像をS3にアップロードし、オブジェクトURLを取得
+	//* 画像をS3にアップロードし、オブジェクトURLを取得
 	objectURL, err := ac.au.UploadImageToS3(encodedImage)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())

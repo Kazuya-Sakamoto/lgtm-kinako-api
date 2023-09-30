@@ -24,13 +24,15 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *e
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
 		CookieSameSite: http.SameSiteNoneMode,
+		CookieSecure: true,
 		// CookieSameSite: http.SameSiteDefaultMode,
 		//CookieMaxAge:   60,
 	}))
+	// * User
 	e.POST("/signup", uc.SignUp)
 	e.POST("/login", uc.LogIn)
 	e.GET("/csrf", uc.CsrfToken)
-
+	// * Album
 	a := e.Group("/album")
 	a.GET("", ac.GetAllAlbums)
 	a.GET("/random", ac.GetRandomAlbums)
