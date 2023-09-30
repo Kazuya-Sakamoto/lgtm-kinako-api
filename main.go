@@ -7,11 +7,12 @@ import (
 	"lgtm-kinako-api/repository"
 	"lgtm-kinako-api/router"
 	"lgtm-kinako-api/usecase"
+	"lgtm-kinako-api/usecase/user"
 )
 
 func main() {
 	db := db.NewDB()
-	//* Handler
+	// * Handler
 	userHandler := handler.NewUserHandler()
 	albumHandler := handler.NewAlbumHandler()
 	// * Repository
@@ -19,7 +20,7 @@ func main() {
 	userRepository := repository.NewUserRepository(db)
 	// * Usecase
 	albumUsecase := usecase.NewAlbumUsecase(albumRepository, albumHandler)
-	userUsecase := usecase.NewUserUsecase(userRepository, userHandler)
+	userUsecase := user.NewUserUsecase(userRepository, userHandler)
 	imageProcessorUsecase := usecase.NewImageProcessor()
 	// * Controller
 	albumController := controller.NewAlbumController(albumUsecase, imageProcessorUsecase)

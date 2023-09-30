@@ -1,8 +1,9 @@
+// lgtm-kinako-api/controller/user_controller.go
 package controller
 
 import (
 	"lgtm-kinako-api/model"
-	"lgtm-kinako-api/usecase"
+	"lgtm-kinako-api/usecase/user"
 	"net/http"
 	"os"
 	"time"
@@ -11,36 +12,36 @@ import (
 )
 
 type IUserController interface {
-	SignUp(c echo.Context) error
-	LogIn(c echo.Context) error
-	CsrfToken(c echo.Context) error
+    SignUp(c echo.Context) error
+    LogIn(c echo.Context) error
+    CsrfToken(c echo.Context) error
 }
 
 type userController struct {
-	uu usecase.IUserUsecase
+    uu user.IUserUsecase
 }
 
-func NewUserController(uu usecase.IUserUsecase) IUserController {
-	return &userController{uu}
+func NewUserController(uu user.IUserUsecase) IUserController {
+    return &userController{uu}
 }
 
 func (uc *userController) SignUp(c echo.Context) error {
-	user := model.User{}
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
-	userRes, err := uc.uu.SignUp(user)
-	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
-	}
-	return c.JSON(http.StatusCreated, userRes)
+    user := model.User{}
+    if err := c.Bind(&user); err != nil {
+        return c.JSON(http.StatusBadRequest, err.Error())
+    }
+    userRes, err := uc.uu.SignUp(user)
+    if err != nil {
+        return c.JSON(http.StatusInternalServerError, err.Error())
+    }
+    return c.JSON(http.StatusCreated, userRes)
 }
 
 func (uc *userController) LogIn(c echo.Context) error {
-	user := model.User{}
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
-	}
+    user := model.User{}
+    if err := c.Bind(&user); err != nil {
+        return c.JSON(http.StatusBadRequest, err.Error())
+    }
 
     tokenString, err := uc.uu.Login(user)
     if err != nil {
@@ -52,10 +53,10 @@ func (uc *userController) LogIn(c echo.Context) error {
 }
 
 func (uc *userController) CsrfToken(c echo.Context) error {
-	token := c.Get("csrf").(string)
-	return c.JSON(http.StatusOK, echo.Map{
-		"csrf_token": token,
-	})
+    token := c.Get("csrf").(string)
+    return c.JSON(http.StatusOK, echo.Map{
+        "csrf_token": token,
+    })
 }
 
 func setTokenCookie(c echo.Context, tokenString string) {
