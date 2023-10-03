@@ -30,7 +30,7 @@ func (ar *albumRepository) GetAllAlbums(albums *[]model.Album) error {
 }
 
 func (ar *albumRepository) GetRandomAlbums(albums *[]model.Album) error {
-	if err := ar.db.Order("RANDOM()").Limit(12).Find(albums).Error; err != nil {
+	if err := ar.db.Order("RANDOM()").Limit(8).Find(albums).Error; err != nil {
 			return err
 	}
 	return nil

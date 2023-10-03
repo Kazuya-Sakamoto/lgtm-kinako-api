@@ -1,4 +1,3 @@
-// lgtm-kinako-api/controller/user_controller.go
 package controller
 
 import (
