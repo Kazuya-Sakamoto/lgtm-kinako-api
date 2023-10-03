@@ -7,6 +7,7 @@ import (
 	"image"
 	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/usecase"
+	"lgtm-kinako-api/usecase/image_processor"
 	"net/http"
 	"strconv"
 	"strings"
@@ -23,11 +24,11 @@ type IAlbumController interface {
 }
 
 type albumController struct {
-	au usecase.IAlbumUsecase
-	ipu usecase.IImageProcessorUsecase
+	au  usecase.IAlbumUsecase
+	ipu image_processor.IImageProcessorUsecase
 }
 
-func NewAlbumController(au usecase.IAlbumUsecase, ipu usecase.IImageProcessorUsecase) IAlbumController {
+func NewAlbumController(au usecase.IAlbumUsecase, ipu image_processor.IImageProcessorUsecase) IAlbumController {
 	return &albumController{au, ipu}
 }
 
@@ -93,7 +94,7 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 	}
 
 	//* アップロードする画像データ
-	encodedImage, err := ac.ipu.ProcessImage(decodedImage, 15.0)
+	encodedImage, err := ac.ipu.ProcessImage(decodedImage)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
