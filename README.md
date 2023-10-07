@@ -1,4 +1,14 @@
 # lgtm-kinako-api
+## 概要
+きなこのLGTM画像を共有出来るサービスです。画像をクリックするとMarkdownがコピーされ使用することができます。
+
+- サービスURL
+  - https://lgtm-kinako.com/
+- フロントリポジトリ
+  - https://github.com/Kazuya-Sakamoto/lgtm-kinako
+
+
+
 
 ## 環境構築
 
