@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"image"
 	"lgtm-kinako-api/model"
-	"lgtm-kinako-api/usecase"
+	"lgtm-kinako-api/usecase/album"
 	"lgtm-kinako-api/usecase/image_processor"
 	"net/http"
 	"strconv"
@@ -24,11 +24,11 @@ type IAlbumController interface {
 }
 
 type albumController struct {
-	au  usecase.IAlbumUsecase
+	au  album.IAlbumUsecase
 	ipu image_processor.IImageProcessorUsecase
 }
 
-func NewAlbumController(au usecase.IAlbumUsecase, ipu image_processor.IImageProcessorUsecase) IAlbumController {
+func NewAlbumController(au album.IAlbumUsecase, ipu image_processor.IImageProcessorUsecase) IAlbumController {
 	return &albumController{au, ipu}
 }
 
