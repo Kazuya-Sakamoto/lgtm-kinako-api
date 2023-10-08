@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"lgtm-kinako-api/model"
-	"lgtm-kinako-api/usecase"
-	"lgtm-kinako-api/usecase/mock"
+	"lgtm-kinako-api/usecase/album"
+	"lgtm-kinako-api/usecase/album/mock"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -27,7 +27,7 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
 
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetAllAlbums").Return(expectedAlbums, nil)
-    controller := NewAlbumController(usecase.IAlbumUsecase(mockAlbumUsecase), nil)
+    controller := NewAlbumController(album.IAlbumUsecase(mockAlbumUsecase), nil)
 
     e := echo.New()
     req := httptest.NewRequest(http.MethodGet, "/albums", nil)
@@ -74,7 +74,7 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
 
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetRandomAlbums").Return(expectedAlbums, nil)
-    controller := NewAlbumController(usecase.IAlbumUsecase(mockAlbumUsecase), nil)
+    controller := NewAlbumController(album.IAlbumUsecase(mockAlbumUsecase), nil)
 
     e := echo.New()
     req := httptest.NewRequest(http.MethodGet, "/random-albums", nil)
