@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"lgtm-kinako-api/model"
+	"lgtm-kinako-api/domain"
 
 	handler "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -9,7 +9,7 @@ import (
 
 
 type IUserHandler interface {
-	UserHandler(user model.User) error
+	UserHandler(user domain.User) error
 }
 
 type userHandler struct{}
@@ -18,7 +18,7 @@ func NewUserHandler() IUserHandler {
 	return &userHandler{}
 }
 
-func (uv *userHandler) UserHandler(user model.User) error {
+func (uv *userHandler) UserHandler(user domain.User) error {
 	return handler.ValidateStruct(&user,
 		handler.Field(
 			&user.Email,

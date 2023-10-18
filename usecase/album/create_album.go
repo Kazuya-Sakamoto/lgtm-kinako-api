@@ -2,8 +2,8 @@
 package album
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 )
 
@@ -16,14 +16,14 @@ func NewCreateAlbumUsecase(ar repository.IAlbumRepository, ah handler.IAlbumHand
 	return &CreateAlbumUsecase{ar, ah}
 }
 
-func (au *CreateAlbumUsecase) CreateAlbum(album model.Album) (model.AlbumResponse, error) {
+func (au *CreateAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
 	if err := au.ah.AlbumHandler(album); err != nil {
-		return model.AlbumResponse{}, err
+		return domain.AlbumResponse{}, err
 	}
 	if err := au.ar.CreateAlbum(&album); err != nil {
-		return model.AlbumResponse{}, err
+		return domain.AlbumResponse{}, err
 	}
-	res := model.AlbumResponse{
+	res := domain.AlbumResponse{
 		ID:        album.ID,
 		Title:     album.Title,
 		Image:     album.Image,

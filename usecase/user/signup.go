@@ -1,8 +1,8 @@
 package user
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 
 	"golang.org/x/crypto/bcrypt"
@@ -17,20 +17,20 @@ func NewSignupUsecase(ur repository.IUserRepository, uh handler.IUserHandler) *S
 	return &SignupUsecase{ur, uh}
 }
 
-func (su *SignupUsecase) SignUp(user model.User) (model.UserResponse, error) {
+func (su *SignupUsecase) SignUp(user domain.User) (domain.UserResponse, error) {
 	if err := su.uh.UserHandler(user); err != nil {
-		return model.UserResponse{}, err
+		return domain.UserResponse{}, err
 	}
 	hash, err := bcrypt.GenerateFromPassword([]byte(user.Password), 10)
 	if err != nil {
-		return model.UserResponse{}, err
+		return domain.UserResponse{}, err
 	}
-	newUser := model.User{Email: user.Email, Password: string(hash)}
+	newUser := domain.User{Email: user.Email, Password: string(hash)}
 	if err := su.ur.CreateUser(&newUser); err != nil {
-		return model.UserResponse{}, err
+		return domain.UserResponse{}, err
 	}
 
-	resUser := model.UserResponse{
+	resUser := domain.UserResponse{
 		ID:    newUser.ID,
 		Email: newUser.Email,
 	}

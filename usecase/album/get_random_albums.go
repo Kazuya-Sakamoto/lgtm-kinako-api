@@ -1,8 +1,8 @@
 package album
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 )
 
@@ -15,14 +15,14 @@ func NewGetRandomAlbumsUsecase(ar repository.IAlbumRepository, ah handler.IAlbum
 	return &GetRandomAlbumsUsecase{ar, ah}
 }
 
-func (au *GetRandomAlbumsUsecase) GetRandomAlbums() ([]model.AlbumResponse, error) {
-	albums := []model.Album{}
+func (au *GetRandomAlbumsUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
+	albums := []domain.Album{}
 	if err := au.ar.GetRandomAlbums(&albums); err != nil {
 		return nil, err
 	}
-	res := []model.AlbumResponse{}
+	res := []domain.AlbumResponse{}
 	for _, v := range albums {
-		a := model.AlbumResponse{
+		a := domain.AlbumResponse{
 			ID:          v.ID,
 			Title:       v.Title,
 			Image: 		   v.Image,

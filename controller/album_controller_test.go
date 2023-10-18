@@ -2,7 +2,7 @@ package controller
 
 import (
 	"encoding/json"
-	"lgtm-kinako-api/model"
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/usecase/album"
 	"lgtm-kinako-api/usecase/album/mock"
 	"net/http"
@@ -15,7 +15,7 @@ import (
 )
 
 func TestAlbumController_GetAllAlbums(t *testing.T) {
-    expectedAlbums := []model.AlbumResponse{
+    expectedAlbums := []domain.AlbumResponse{
         {
             ID:        1,
             Title:     "Album 1",
@@ -37,7 +37,7 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
     if assert.NoError(t, controller.GetAllAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)
 
-        var albums []model.AlbumResponse
+        var albums []domain.AlbumResponse
         err := json.Unmarshal(rec.Body.Bytes(), &albums)
         assert.NoError(t, err)
         assert.Len(t, albums, len(expectedAlbums), "Unexpected number of albums")
@@ -55,7 +55,7 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
 }
 
 func TestAlbumController_GetRandomAlbums(t *testing.T) {
-    expectedAlbums := []model.AlbumResponse{
+    expectedAlbums := []domain.AlbumResponse{
         {
             ID:        1,
             Title:     "Album 1",
@@ -84,7 +84,7 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
     if assert.NoError(t, controller.GetRandomAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)
 
-        var albums []model.AlbumResponse
+        var albums []domain.AlbumResponse
         err := json.Unmarshal(rec.Body.Bytes(), &albums)
         assert.NoError(t, err)
 

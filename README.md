@@ -1,18 +1,17 @@
 # lgtm-kinako-api
-## 概要
-きなこのLGTM画像を共有出来るサービスです。画像をクリックするとMarkdownがコピーされ使用することができます。
 
-- サービスURL
+## 概要
+
+きなこ（うちの愛犬）の LGTM 画像を LGTM をする際に共有出来るサービスです。画像をクリックすると Markdown がコピーされ使用することができます。
+
+- サービス URL
   - https://lgtm-kinako.com/
 - フロントリポジトリ
   - https://github.com/Kazuya-Sakamoto/lgtm-kinako
 
-
-
-
 ## 環境構築
 
-- pathの追加
+- path の追加
 
 ```
 $ nano ~/.zshrc
@@ -25,16 +24,19 @@ export PATH=$PATH:$GOPATH/bin
 ```
 
 - ~/.zshrc を読み込み直す
+
 ```
 $ source ~/.zshrc
 ```
 
 - air と dlv のコマンドが実行できるか確認
+
 ```
 $ air -v
 $ dlv -h
 ```
-- air と dlvをインストールしていない場合は以下でインストール
+
+- air と dlv をインストールしていない場合は以下でインストール
 
 ```
 $ go install github.com/cosmtrek/air@latest
@@ -44,8 +46,8 @@ $ go install github.com/cosmtrek/air@latest
 $ go install github.com/go-delve/delve/cmd/dlv@latest
 ```
 
-
 - 起動
+
 ```
 $ GO_ENV=dev air
 ```

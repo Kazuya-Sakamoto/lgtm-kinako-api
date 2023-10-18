@@ -1,13 +1,13 @@
 package handler
 
 import (
-	"lgtm-kinako-api/model"
+	"lgtm-kinako-api/domain"
 
 	handler "github.com/go-ozzo/ozzo-validation/v4"
 )
 
 type IAlbumHandler interface {
-	AlbumHandler(album model.Album) error
+	AlbumHandler(album domain.Album) error
 }
 
 type albumHandler struct{}
@@ -17,7 +17,7 @@ func NewAlbumHandler() IAlbumHandler {
 }
 
 
-func (ah *albumHandler) AlbumHandler(album model.Album) error {
+func (ah *albumHandler) AlbumHandler(album domain.Album) error {
 	return handler.ValidateStruct(&album,
 		handler.Field(
 			&album.Title,

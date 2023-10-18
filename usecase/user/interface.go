@@ -1,10 +1,8 @@
 package user
 
-import (
-	"lgtm-kinako-api/model"
-)
+import "lgtm-kinako-api/domain"
 
 type IUserUsecase interface {
-    SignUp(user model.User) (model.UserResponse, error)
-    Login(user model.User) (string, error)
+    SignUp(user domain.User) (domain.UserResponse, error)
+    Login(user domain.User) (string, error)
 }
