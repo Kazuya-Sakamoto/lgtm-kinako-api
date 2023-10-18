@@ -5,7 +5,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"image"
-	"lgtm-kinako-api/model"
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/usecase/album"
 	"lgtm-kinako-api/usecase/image_processor"
 	"net/http"
@@ -53,7 +53,7 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)
 	claims := user.Claims.(jwt.MapClaims)
 	userId := claims["user_id"]
-	album := model.Album{}
+	album := domain.Album{}
 	if err := c.Bind(&album); err != nil {
 		return c.JSON(http.StatusBadRequest, err.Error())
 	}

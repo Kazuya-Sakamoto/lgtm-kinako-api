@@ -1,8 +1,8 @@
 package album
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 )
 
@@ -24,11 +24,11 @@ func NewAlbumUsecase(ar repository.IAlbumRepository, uh handler.IAlbumHandler) *
 	}
 }
 
-func (au *AlbumUsecase) GetAllAlbums() ([]model.AlbumResponse, error) {
+func (au *AlbumUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
 	return au.GetAllAlbumsUsecase.GetAllAlbums()
 }
 
-func (au *AlbumUsecase) GetRandomAlbums() ([]model.AlbumResponse, error) {
+func (au *AlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
 	return au.GetRandomAlbumsUsecase.GetRandomAlbums()
 }
 
@@ -36,7 +36,7 @@ func (au *AlbumUsecase) UploadImageToS3(encodedImage []byte) (string, error) {
 	return au.UploadImageToS3Usecase.UploadImageToS3(encodedImage)
 }
 
-func (au *AlbumUsecase) CreateAlbum(album model.Album) (model.AlbumResponse, error) {
+func (au *AlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
 	return au.CreateAlbumUsecase.CreateAlbum(album)
 }
 

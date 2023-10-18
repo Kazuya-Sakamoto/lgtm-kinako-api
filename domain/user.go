@@ -1,4 +1,4 @@
-package model
+package domain
 
 import "time"
 
@@ -13,4 +13,9 @@ type User struct {
 type UserResponse struct {
 	ID    uint   `json:"id" gorm:"primaryKey"`
 	Email string `json:"email" gorm:"unique"`
+}
+
+type IUserRepository interface {
+	GetUserByEmail(user *User, email string) error
+	CreateUser(user *User) error
 }

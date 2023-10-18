@@ -1,7 +1,7 @@
 package controller
 
 import (
-	"lgtm-kinako-api/model"
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/usecase/user"
 	"net/http"
 	"os"
@@ -25,7 +25,7 @@ func NewUserController(uu user.IUserUsecase) IUserController {
 }
 
 func (uc *userController) SignUp(c echo.Context) error {
-    user := model.User{}
+    user := domain.User{}
     if err := c.Bind(&user); err != nil {
         return c.JSON(http.StatusBadRequest, err.Error())
     }
@@ -37,7 +37,7 @@ func (uc *userController) SignUp(c echo.Context) error {
 }
 
 func (uc *userController) LogIn(c echo.Context) error {
-    user := model.User{}
+    user := domain.User{}
     if err := c.Bind(&user); err != nil {
         return c.JSON(http.StatusBadRequest, err.Error())
     }

@@ -1,4 +1,4 @@
-package model
+package domain
 
 import "time"
 
@@ -18,4 +18,11 @@ type AlbumResponse struct {
 	Image       string    `json:"image"`
 	CreatedAt   time.Time `json:"created_at"`
 	UpdatedAt   time.Time `json:"updated_at"`
+}
+
+type IAlbumRepository interface {
+	GetAllAlbums(albums *[]Album) error
+	GetRandomAlbums(albums *[]Album) error
+	CreateAlbum(task *Album) error
+	DeleteAlbum(userId uint, albumId uint) error
 }

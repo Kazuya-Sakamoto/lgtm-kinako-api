@@ -1,13 +1,11 @@
 package album
 
-import (
-	"lgtm-kinako-api/model"
-)
+import "lgtm-kinako-api/domain"
 
 type IAlbumUsecase interface {
-	GetAllAlbums() ([]model.AlbumResponse, error)
-	GetRandomAlbums() ([]model.AlbumResponse, error)
-	CreateAlbum(album model.Album) (model.AlbumResponse, error)
+	GetAllAlbums() ([]domain.AlbumResponse, error)
+	GetRandomAlbums() ([]domain.AlbumResponse, error)
+	CreateAlbum(album domain.Album) (domain.AlbumResponse, error)
 	UploadImageToS3(encodedImage []byte) (string, error)
 	DeleteAlbum(userId uint, albumId uint) error
 }

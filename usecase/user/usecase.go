@@ -1,8 +1,8 @@
 package user
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 )
 
@@ -18,10 +18,10 @@ func NewUserUsecase(ur repository.IUserRepository, uh handler.IUserHandler) *Use
 	}
 }
 
-func (u *UserUsecase) SignUp(user model.User) (model.UserResponse, error) {
+func (u *UserUsecase) SignUp(user domain.User) (domain.UserResponse, error) {
 	return u.SignUpUsecase.SignUp(user)
 }
 
-func (u *UserUsecase) Login(user model.User) (string, error) {
+func (u *UserUsecase) Login(user domain.User) (string, error) {
 	return u.LoginUsecase.Login(user)
 }

@@ -1,8 +1,8 @@
 package user
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/model"
 	"lgtm-kinako-api/repository"
 	"os"
 	"time"
@@ -20,11 +20,11 @@ func NewLoginUsecase(ur repository.IUserRepository, uh handler.IUserHandler) *Lo
 	return &LoginUsecase{ur, uh}
 }
 
-func (lu *LoginUsecase) Login(user model.User) (string, error) {
+func (lu *LoginUsecase) Login(user domain.User) (string, error) {
 	if err := lu.uh.UserHandler(user); err != nil {
 		return "", err
 	}
-	storedUser := model.User{}
+	storedUser := domain.User{}
 	if err := lu.ur.GetUserByEmail(&storedUser, user.Email); err != nil {
 		return "", err
 	}

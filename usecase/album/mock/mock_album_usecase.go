@@ -1,7 +1,7 @@
 package mock
 
 import (
-	"lgtm-kinako-api/model"
+	"lgtm-kinako-api/domain"
 
 	"github.com/stretchr/testify/mock"
 )
@@ -10,19 +10,19 @@ type MockAlbumUsecase struct {
     mock.Mock
 }
 
-func (mu *MockAlbumUsecase) GetAllAlbums() ([]model.AlbumResponse, error) {
+func (mu *MockAlbumUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
     args := mu.Called()
-    return args.Get(0).([]model.AlbumResponse), args.Error(1)
+    return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 
-func (mu *MockAlbumUsecase) GetRandomAlbums() ([]model.AlbumResponse, error) {
+func (mu *MockAlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
     args := mu.Called()
-    return args.Get(0).([]model.AlbumResponse), args.Error(1)
+    return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 
-func (mu *MockAlbumUsecase) CreateAlbum(album model.Album) (model.AlbumResponse, error) {
+func (mu *MockAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
     args := mu.Called(album)
-    return args.Get(0).(model.AlbumResponse), args.Error(1)
+    return args.Get(0).(domain.AlbumResponse), args.Error(1)
 }
 
 func (mu *MockAlbumUsecase) DeleteAlbum(userId, albumId uint) error {
