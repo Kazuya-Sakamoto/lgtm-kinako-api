@@ -10,9 +10,67 @@ import (
 	"testing"
 	"time"
 
+	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
 	"github.com/stretchr/testify/assert"
 )
+
+
+func Setup(mockUsecase *mock.MockAlbumUsecase, url string) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IAlbumController) {
+	controller := NewAlbumController(album.IAlbumUsecase(mockUsecase), nil)
+	e := echo.New()
+	req := httptest.NewRequest(http.MethodGet, url, nil)
+	rec := httptest.NewRecorder()
+	c := e.NewContext(req, rec)
+	c.Set("user", &jwt.Token{
+		Claims: jwt.MapClaims{
+			"user_id": float64(1),
+		},
+	})
+	return e, rec, c, controller
+}
+
+func TestAlbumController_GetAllAlbums(t *testing.T) {
+    expectedAlbums := []domain.AlbumResponse{
+        {
+            ID:        1,
+            Title:     "Album 1",
+            Image:     "image1.jpg",
+            CreatedAt: time.Now(),
+            UpdatedAt: time.Now(),
+        },
+        {
+            ID:        2,
+            Title:     "Album 2",
+            Image:     "image2.jpg",
+            CreatedAt: time.Now(),
+            UpdatedAt: time.Now(),
+        },
+    }
+
+    mockAlbumUsecase := new(mock.MockAlbumUsecase)
+    mockAlbumUsecase.On("GetAllAlbums", uint(1)).Return(expectedAlbums, nil)
+
+    _, rec, c, controller := Setup(mockAlbumUsecase, "/album")
+
+    if assert.NoError(t, controller.GetAllAlbums(c)) {
+        assert.Equal(t, http.StatusOK, rec.Code)
+
+        var albums []domain.AlbumResponse
+        err := json.Unmarshal(rec.Body.Bytes(), &albums)
+        assert.NoError(t, err)
+
+        assert.Len(t, albums, len(expectedAlbums), "Unexpected number of albums")
+        for i, expected := range expectedAlbums {
+            assert.Equal(t, expected.ID, albums[i].ID, "Unexpected album ID at index", i)
+            assert.Equal(t, expected.Title, albums[i].Title, "Unexpected album title at index", i)
+            assert.Equal(t, expected.Image, albums[i].Image, "Unexpected album image at index", i)
+
+            assert.True(t, expected.CreatedAt.Equal(albums[i].CreatedAt), "Unexpected album CreatedAt at index", i)
+            assert.True(t, expected.UpdatedAt.Equal(albums[i].UpdatedAt), "Unexpected album UpdatedAt at index", i)
+        }
+    }
+}
 
 
 func TestAlbumController_GetRandomAlbums(t *testing.T) {
@@ -32,15 +90,10 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
             UpdatedAt: time.Now(),
         },
     }
-
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetRandomAlbums").Return(expectedAlbums, nil)
-    controller := NewAlbumController(album.IAlbumUsecase(mockAlbumUsecase), nil)
 
-    e := echo.New()
-    req := httptest.NewRequest(http.MethodGet, "/random-albums", nil)
-    rec := httptest.NewRecorder()
-    c := e.NewContext(req, rec)
+    _, rec, c, controller := Setup(mockAlbumUsecase, "/album/random")
 
     if assert.NoError(t, controller.GetRandomAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)
