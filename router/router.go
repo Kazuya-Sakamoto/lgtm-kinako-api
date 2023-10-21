@@ -11,7 +11,15 @@ import (
 )
 
 func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *echo.Echo {
+	logConfig := middleware.LoggerConfig{
+		Format: "${host}${uri} METHOD:${method} STATUS:${status} TIME:${time_rfc3339} LATENCY:${latency_human} ERROR:${error}\n",
+	}
+
 	e := echo.New()
+
+	e.Use(middleware.LoggerWithConfig(logConfig))
+	e.Use(middleware.Recover())
+
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
 		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
@@ -34,12 +42,12 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *e
 	e.GET("/csrf", uc.CsrfToken)
 	// * Album
 	a := e.Group("/album")
-	a.GET("", ac.GetAllAlbums)
 	a.GET("/random", ac.GetRandomAlbums)
 	a.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
+	a.GET("", ac.GetAllAlbums)
 	a.POST("", ac.CreateAlbum)
 	a.DELETE("/:albumId", ac.DeleteAlbum)
 

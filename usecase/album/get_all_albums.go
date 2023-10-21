@@ -15,9 +15,9 @@ func NewGetAllAlbumsUsecase(ar repository.IAlbumRepository, ah handler.IAlbumHan
 	return &GetAllAlbumsUsecase{ar, ah}
 }
 
-func (au *GetAllAlbumsUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
+func (au *GetAllAlbumsUsecase) GetAllAlbums(userId uint) ([]domain.AlbumResponse, error) {
 	albums := []domain.Album{}
-	if err := au.ar.GetAllAlbums(&albums); err != nil {
+	if err := au.ar.GetAllAlbums(&albums, userId); err != nil {
 		return nil, err
 	}
 	res := []domain.AlbumResponse{}

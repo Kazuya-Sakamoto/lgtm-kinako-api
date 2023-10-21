@@ -10,8 +10,8 @@ type MockAlbumUsecase struct {
     mock.Mock
 }
 
-func (mu *MockAlbumUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
-    args := mu.Called()
+func (mu *MockAlbumUsecase) GetAllAlbums(userId uint) ([]domain.AlbumResponse, error) {
+    args := mu.Called(userId)
     return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 

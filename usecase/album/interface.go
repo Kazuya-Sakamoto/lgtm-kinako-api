@@ -3,7 +3,7 @@ package album
 import "lgtm-kinako-api/domain"
 
 type IAlbumUsecase interface {
-	GetAllAlbums() ([]domain.AlbumResponse, error)
+	GetAllAlbums(userId uint) ([]domain.AlbumResponse, error)
 	GetRandomAlbums() ([]domain.AlbumResponse, error)
 	CreateAlbum(album domain.Album) (domain.AlbumResponse, error)
 	UploadImageToS3(encodedImage []byte) (string, error)

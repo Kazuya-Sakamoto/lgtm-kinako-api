@@ -15,8 +15,12 @@ func NewAlbumRepository(db *gorm.DB) IAlbumRepository {
 	return &albumRepository{db}
 }
 
-func (ar *albumRepository) GetAllAlbums(albums *[]domain.Album) error {
-	if err := ar.db.Order("created_at").Find(albums).Error; err != nil {
+func (ar *albumRepository) GetAllAlbums(albums *[]domain.Album, userId uint) error {
+	if err := ar.db.
+		Joins("INNER JOIN users AS u ON u.id = albums.user_id").
+		Where("user_id = ?", userId).
+		Order("created_at").
+		Find(albums).Error; err != nil {
 		return err
 	}
 	return nil
