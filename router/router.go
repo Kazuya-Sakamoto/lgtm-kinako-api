@@ -16,9 +16,16 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *e
 	}
 
 	e := echo.New()
-
+	//* Logger
 	e.Use(middleware.LoggerWithConfig(logConfig))
 	e.Use(middleware.Recover())
+	//* HSTS
+	e.Use(func(next echo.HandlerFunc) echo.HandlerFunc {
+		return func(c echo.Context) error {
+			c.Response().Header().Set("Strict-Transport-Security", "max-age=31536000; includeSubDomains; preload")
+			return next(c)
+		}
+	})
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},

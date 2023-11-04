@@ -16,42 +16,45 @@ import (
 )
 
 
-func Setup(mockUsecase *mock.MockAlbumUsecase, url string) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IAlbumController) {
+func SetupAlbumControllerTest(mockUsecase *mock.MockAlbumUsecase, url string) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IAlbumController) {
 	controller := NewAlbumController(album.IAlbumUsecase(mockUsecase), nil)
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, url, nil)
 	rec := httptest.NewRecorder()
 	c := e.NewContext(req, rec)
-	c.Set("user", &jwt.Token{
-		Claims: jwt.MapClaims{
-			"user_id": float64(1),
-		},
-	})
 	return e, rec, c, controller
 }
+
+func setJWTToken(c echo.Context, userID uint) {
+	c.Set("user", &jwt.Token{
+		Claims: jwt.MapClaims{
+			"user_id": float64(userID),
+		},
+	})
+}
+
 
 func TestAlbumController_GetAllAlbums(t *testing.T) {
     expectedAlbums := []domain.AlbumResponse{
         {
             ID:        1,
-            Title:     "Album 1",
+            Title:     "title2",
             Image:     "image1.jpg",
             CreatedAt: time.Now(),
             UpdatedAt: time.Now(),
         },
         {
             ID:        2,
-            Title:     "Album 2",
+            Title:     "title2",
             Image:     "image2.jpg",
             CreatedAt: time.Now(),
             UpdatedAt: time.Now(),
         },
     }
-
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetAllAlbums", uint(1)).Return(expectedAlbums, nil)
-
-    _, rec, c, controller := Setup(mockAlbumUsecase, "/album")
+    _, rec, c, controller := SetupAlbumControllerTest(mockAlbumUsecase, "/album")
+    setJWTToken(c, 1)
 
     if assert.NoError(t, controller.GetAllAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)
@@ -77,14 +80,14 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
     expectedAlbums := []domain.AlbumResponse{
         {
             ID:        1,
-            Title:     "Album 1",
+            Title:     "title2",
             Image:     "image1.jpg",
             CreatedAt: time.Now(),
             UpdatedAt: time.Now(),
         },
         {
             ID:        2,
-            Title:     "Album 2",
+            Title:     "title2",
             Image:     "image2.jpg",
             CreatedAt: time.Now(),
             UpdatedAt: time.Now(),
@@ -92,8 +95,7 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
     }
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetRandomAlbums").Return(expectedAlbums, nil)
-
-    _, rec, c, controller := Setup(mockAlbumUsecase, "/album/random")
+    _, rec, c, controller := SetupAlbumControllerTest(mockAlbumUsecase, "/album/random")
 
     if assert.NoError(t, controller.GetRandomAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)
