@@ -13,17 +13,25 @@ import (
 
 func main() {
 	db := db.NewDB()
-	// * Handler
+	/* 
+		Handler
+	*/
 	userHandler := handler.NewUserHandler()
 	albumHandler := handler.NewAlbumHandler()
-	// * Repository
+	/* 
+		Repository
+	*/
 	albumRepository := repository.NewAlbumRepository(db)
 	userRepository := repository.NewUserRepository(db)
-	// * Usecase
+	/* 
+		Usecase
+	*/
 	albumUsecase := album.NewAlbumUsecase(albumRepository, albumHandler)
 	userUsecase := user.NewUserUsecase(userRepository, userHandler)
 	imageProcessorUsecase := image_processor.NewImageProcessorUsecase()
-	// * Controller
+	/* 
+		Controller
+	*/
 	albumController := controller.NewAlbumController(albumUsecase, imageProcessorUsecase)
 	userController := controller.NewUserController(userUsecase)
 

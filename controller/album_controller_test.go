@@ -16,7 +16,7 @@ import (
 )
 
 
-func SetupAlbumControllerTest(mockUsecase *mock.MockAlbumUsecase, url string) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IAlbumController) {
+func setupAlbumControllerTest(mockUsecase *mock.MockAlbumUsecase, url string) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IAlbumController) {
 	controller := NewAlbumController(album.IAlbumUsecase(mockUsecase), nil)
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, url, nil)
@@ -53,7 +53,7 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
     }
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetAllAlbums", uint(1)).Return(expectedAlbums, nil)
-    _, rec, c, controller := SetupAlbumControllerTest(mockAlbumUsecase, "/album")
+    _, rec, c, controller := setupAlbumControllerTest(mockAlbumUsecase, "/album")
     setJWTToken(c, 1)
 
     if assert.NoError(t, controller.GetAllAlbums(c)) {
@@ -95,7 +95,7 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
     }
     mockAlbumUsecase := new(mock.MockAlbumUsecase)
     mockAlbumUsecase.On("GetRandomAlbums").Return(expectedAlbums, nil)
-    _, rec, c, controller := SetupAlbumControllerTest(mockAlbumUsecase, "/album/random")
+    _, rec, c, controller := setupAlbumControllerTest(mockAlbumUsecase, "/album/random")
 
     if assert.NoError(t, controller.GetRandomAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)

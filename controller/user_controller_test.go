@@ -14,7 +14,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func SetupUserControllerTest(mockUsecase *mock.MockUserUsecase, method, url string, body []byte) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IUserController) {
+func setupUserControllerTest(mockUsecase *mock.MockUserUsecase, method, url string, body []byte) (*echo.Echo, *httptest.ResponseRecorder, echo.Context, IUserController) {
     controller := NewUserController(mockUsecase)
     e := echo.New()
     req := httptest.NewRequest(method, url, bytes.NewBuffer(body))
@@ -28,7 +28,7 @@ func TestUserController_CsrfToken(t *testing.T) {
     mu := new(mock.MockUserUsecase)
     csrf_token := "expect_csrf_token"
 
-    _, res, c, controller := SetupUserControllerTest(mu, http.MethodGet, "/csrf", nil)
+    _, res, c, controller := setupUserControllerTest(mu, http.MethodGet, "/csrf", nil)
     c.Set("csrf", csrf_token)
 
     if assert.NoError(t, controller.CsrfToken(c)) {
@@ -47,7 +47,7 @@ func TestUserController_LogIn(t *testing.T) {
     mu.On("Login", user).Return(token, nil)
 
     userJSON, _ := json.Marshal(user)
-    _, res, c, controller := SetupUserControllerTest(mu, http.MethodPost, "/login", userJSON)
+    _, res, c, controller := setupUserControllerTest(mu, http.MethodPost, "/login", userJSON)
 
     if assert.NoError(t, controller.LogIn(c)) {
         assert.Equal(t, http.StatusOK, res.Code)
