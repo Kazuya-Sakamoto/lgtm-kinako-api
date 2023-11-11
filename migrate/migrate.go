@@ -39,10 +39,15 @@ func migrateDB(db *gorm.DB) {
 		{
 			ID: "20231111_remove_album_fields",
 			Migrate: func(tx *gorm.DB) error {
-				if err := tx.Migrator().DropColumn(&domain.Album{}, "image_by_data"); err != nil {
-					return err
+				if tx.Migrator().HasColumn(&domain.Album{}, "image_by_data") {
+					if err := tx.Migrator().DropColumn(&domain.Album{}, "image_by_data"); err != nil {
+						return err
+					}
 				}
-				return tx.Migrator().DropColumn(&domain.Album{}, "bydata")
+				if tx.Migrator().HasColumn(&domain.Album{}, "bydata") {
+					return tx.Migrator().DropColumn(&domain.Album{}, "bydata")
+				}
+				return nil
 			},
 			Rollback: func(tx *gorm.DB) error {
 				return nil
