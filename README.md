@@ -9,6 +9,13 @@
 - フロントリポジトリ
   - https://github.com/Kazuya-Sakamoto/lgtm-kinako
 
+## 環境
+
+- golang 1.20.7
+- echo v4.11.1
+- postgres v1.5.2
+- gormigrate v2.1.1
+
 ## 環境構築
 
 - path の追加
