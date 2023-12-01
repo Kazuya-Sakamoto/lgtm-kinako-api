@@ -24,7 +24,7 @@ func setupUserControllerTest(mockUsecase *mock.MockUserUsecase, method, url stri
     return e, rec, c, controller
 }
 
-func TestUserController_CsrfToken(t *testing.T) {
+func Test_UserController_CsrfToken(t *testing.T) {
     mu := new(mock.MockUserUsecase)
     csrf_token := "expect_csrf_token"
 
@@ -40,7 +40,7 @@ func TestUserController_CsrfToken(t *testing.T) {
     }
 }
 
-func TestUserController_LogIn(t *testing.T) {
+func Test_UserController_LogIn(t *testing.T) {
     mu := new(mock.MockUserUsecase)
     token := "expected_token"
     user := domain.User{Email: "test@test.com", Password: "password"}

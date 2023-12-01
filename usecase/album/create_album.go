@@ -1,4 +1,3 @@
-// usecase/album/create_album.go
 package album
 
 import (

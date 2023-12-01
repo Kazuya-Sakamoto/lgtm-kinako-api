@@ -17,20 +17,20 @@ func setupLoginUsecase(t *testing.T) (*mock.MockUserRepository, *mock.MockUserHa
 	originalSecret := os.Getenv("SECRET")
 	os.Setenv("SECRET", "testsecret")
 
-	mockRepository := new(mock.MockUserRepository)
-	mockHandler := new(mock.MockUserHandler)
-	loginUsecase := NewLoginUsecase(mockRepository, mockHandler)
+	mr := new(mock.MockUserRepository)
+	mh := new(mock.MockUserHandler)
+	usecase := NewLoginUsecase(mr, mh)
 
-	return mockRepository, mockHandler, loginUsecase, func() {
+	return mr, mh, usecase, func() {
 		os.Setenv("SECRET", originalSecret)
-		mockRepository.AssertExpectations(t)
-		mockHandler.AssertExpectations(t)
+		mr.AssertExpectations(t)
+		mh.AssertExpectations(t)
 	}
 }
 
-func TestLoginUsecase_Login(t *testing.T) {
+func Test_UserUsecase_Login(t *testing.T) {
 	t.Run("正常にLoginが成功すること", func(t *testing.T) {
-		mockRepository, mockHandler, loginUsecase, cleanup := setupLoginUsecase(t)
+		mr, mh, usecase, cleanup := setupLoginUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -45,12 +45,12 @@ func TestLoginUsecase_Login(t *testing.T) {
 		/* 
 			モックの期待値の設定
 		*/
-		mockHandler.On("UserHandler", input).Return(nil)
-		mockRepository.On("GetUserByEmail", &domain.User{}, input.Email).Return(user, nil)
+		mh.On("UserHandler", input).Return(nil)
+		mr.On("GetUserByEmail", &domain.User{}, input.Email).Return(user, nil)
 		/* 
 			ログインの実行
 		*/
-		token, err := loginUsecase.Login(input)
+		token, err := usecase.Login(input)
 		require.NoError(t, err)
 		require.NotEmpty(t, token)
 		/* 
@@ -73,12 +73,12 @@ func TestLoginUsecase_Login(t *testing.T) {
 			t.Fail()
 		}
 		// モックの検証
-		mockHandler.AssertExpectations(t)
-		mockRepository.AssertExpectations(t)
+		mh.AssertExpectations(t)
+		mr.AssertExpectations(t)
 	})
 
 	t.Run("ユーザーが存在しない場合Loginが失敗すること", func(t *testing.T) {
-		mockRepository, mockHandler, loginUsecase, cleanup := setupLoginUsecase(t)
+		mr, mh, usecase, cleanup := setupLoginUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -88,18 +88,18 @@ func TestLoginUsecase_Login(t *testing.T) {
 		/* 
 			ユーザーが見つからない場合のモックの設定
 		*/
-		mockHandler.On("UserHandler", input).Return(nil)
-		mockRepository.On("GetUserByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
+		mh.On("UserHandler", input).Return(nil)
+		mr.On("GetUserByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
 		/* 
 			ログインの実行
 		*/
-		_, err := loginUsecase.Login(input)
+		_, err := usecase.Login(input)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "user not found")
 		/* 
 			モックの検証
 		*/
-		mockHandler.AssertExpectations(t)
-		mockRepository.AssertExpectations(t)
+		mh.AssertExpectations(t)
+		mr.AssertExpectations(t)
 	})
 }

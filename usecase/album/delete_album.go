@@ -1,4 +1,3 @@
-// usecase/album/delete_album.go
 package album
 
 import "lgtm-kinako-api/repository"
@@ -11,7 +10,7 @@ func NewDeleteAlbumUsecase(ar repository.IAlbumRepository) *DeleteAlbumUsecase {
 	return &DeleteAlbumUsecase{ar}
 }
 
-func (au *DeleteAlbumUsecase) DeleteAlbum(userId uint, albumId uint) error {
+func (au *DeleteAlbumUsecase) DeleteAlbum(userId, albumId uint) error {
 	if err := au.ar.DeleteAlbum(userId, albumId); err != nil {
 		return err
 	}
