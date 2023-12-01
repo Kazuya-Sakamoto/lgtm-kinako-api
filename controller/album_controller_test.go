@@ -34,7 +34,7 @@ func setJWTToken(c echo.Context, userID uint) {
 }
 
 
-func TestAlbumController_GetAllAlbums(t *testing.T) {
+func Test_AlbumController_GetAllAlbums(t *testing.T) {
     expectedAlbums := []domain.AlbumResponse{
         {
             ID:        1,
@@ -51,9 +51,9 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
             UpdatedAt: time.Now(),
         },
     }
-    mockAlbumUsecase := new(mock.MockAlbumUsecase)
-    mockAlbumUsecase.On("GetAllAlbums", uint(1)).Return(expectedAlbums, nil)
-    _, rec, c, controller := setupAlbumControllerTest(mockAlbumUsecase, "/album")
+    mau := new(mock.MockAlbumUsecase)
+    mau.On("GetAllAlbums", uint(1)).Return(expectedAlbums, nil)
+    _, rec, c, controller := setupAlbumControllerTest(mau, "/album")
     setJWTToken(c, 1)
 
     if assert.NoError(t, controller.GetAllAlbums(c)) {
@@ -76,7 +76,7 @@ func TestAlbumController_GetAllAlbums(t *testing.T) {
 }
 
 
-func TestAlbumController_GetRandomAlbums(t *testing.T) {
+func Test_AlbumController_GetRandomAlbums(t *testing.T) {
     expectedAlbums := []domain.AlbumResponse{
         {
             ID:        1,
@@ -93,9 +93,9 @@ func TestAlbumController_GetRandomAlbums(t *testing.T) {
             UpdatedAt: time.Now(),
         },
     }
-    mockAlbumUsecase := new(mock.MockAlbumUsecase)
-    mockAlbumUsecase.On("GetRandomAlbums").Return(expectedAlbums, nil)
-    _, rec, c, controller := setupAlbumControllerTest(mockAlbumUsecase, "/album/random")
+    mau := new(mock.MockAlbumUsecase)
+    mau.On("GetRandomAlbums").Return(expectedAlbums, nil)
+    _, rec, c, controller := setupAlbumControllerTest(mau, "/album/random")
 
     if assert.NoError(t, controller.GetRandomAlbums(c)) {
         assert.Equal(t, http.StatusOK, rec.Code)

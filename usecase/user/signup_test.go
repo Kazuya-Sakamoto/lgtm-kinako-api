@@ -11,19 +11,19 @@ import (
 )
 
 func setupSignupUsecase(t *testing.T) (*mock.MockUserRepository, *mock.MockUserHandler, *SignupUsecase, func()) {
-	mockRepository := new(mock.MockUserRepository)
-	mockHandler := new(mock.MockUserHandler)
-	signupUsecase := NewSignupUsecase(mockRepository, mockHandler)
+	mr := new(mock.MockUserRepository)
+	mh := new(mock.MockUserHandler)
+	usecase := NewSignupUsecase(mr, mh)
 
-	return mockRepository, mockHandler, signupUsecase, func() {
-		mockRepository.AssertExpectations(t)
-		mockHandler.AssertExpectations(t)
+	return mr, mh, usecase, func() {
+		mr.AssertExpectations(t)
+		mh.AssertExpectations(t)
 	}
 }
 
-func TestSignupUsecase_SignUp(t *testing.T) {
+func Test_UserUsecase_SignUp(t *testing.T) {
 	t.Run("正常にSignupが成功すること", func(t *testing.T) {
-		mockRepository, mockHandler, signupUsecase, cleanup := setupSignupUsecase(t)
+		mr, mh, usecase, cleanup := setupSignupUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -31,20 +31,20 @@ func TestSignupUsecase_SignUp(t *testing.T) {
 			Password: "testpassword",
 		}
 
-		mockHandler.On("UserHandler", input).Return(nil)
-		mockRepository.On("CreateUser", testifyMock.AnythingOfType("*domain.User")).Run(func(args testifyMock.Arguments) {
+		mh.On("UserHandler", input).Return(nil)
+		mr.On("CreateUser", testifyMock.AnythingOfType("*domain.User")).Run(func(args testifyMock.Arguments) {
 			arg := args.Get(0).(*domain.User)
 			arg.ID = 1
 		}).Return(nil)
-		resUser, err := signupUsecase.SignUp(input)
+		res, err := usecase.SignUp(input)
 
 		require.NoError(t, err)
-		assert.NotEmpty(t, resUser.ID)
-		assert.Equal(t, input.Email, resUser.Email)
+		assert.NotEmpty(t, res.ID)
+		assert.Equal(t, input.Email, res.Email)
 	})
 
 	t.Run("Handlerがエラーを返した場合にSignupが失敗すること", func(t *testing.T) {
-		_, mockUserHandler, mockHandler, cleanup := setupSignupUsecase(t)
+		_, mockUserHandler, mh, cleanup := setupSignupUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -53,13 +53,13 @@ func TestSignupUsecase_SignUp(t *testing.T) {
 		}
 
 		mockUserHandler.On("UserHandler", input).Return(assert.AnError)
-		_, err := mockHandler.SignUp(input)
+		_, err := mh.SignUp(input)
 
 		require.Error(t, err)
 	})
 
 	t.Run("CreateUserがエラーを返した場合にSignupが失敗すること", func(t *testing.T) {
-		mockRepository, mockHandler, signupUsecase, cleanup := setupSignupUsecase(t)
+		mr, mh, usecase, cleanup := setupSignupUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -67,9 +67,9 @@ func TestSignupUsecase_SignUp(t *testing.T) {
 			Password: "testpassword",
 		}
 
-		mockHandler.On("UserHandler", input).Return(nil)
-		mockRepository.On("CreateUser", testifyMock.AnythingOfType("*domain.User")).Return(assert.AnError)
-		_, err := signupUsecase.SignUp(input)
+		mh.On("UserHandler", input).Return(nil)
+		mr.On("CreateUser", testifyMock.AnythingOfType("*domain.User")).Return(assert.AnError)
+		_, err := usecase.SignUp(input)
 
 		require.Error(t, err)
 	})
