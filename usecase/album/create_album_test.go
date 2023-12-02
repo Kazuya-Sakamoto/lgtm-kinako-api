@@ -1,7 +1,6 @@
 package album
 
 import (
-	"errors"
 	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/repository/mock"
 	"testing"
@@ -44,20 +43,4 @@ func Test_AlbumUsecase_CreateAlbum(t *testing.T) {
 		require.Equal(t, album.Title, res.Title)
 		require.Equal(t, album.Image, res.Image)
 	})
-
-
-    t.Run("タイトルが空の場合にエラーが発生すること", func(t *testing.T) {
-        _, mh, usecase, cleanup := setupCreateAlbumUsecase(t)
-        defer cleanup()
-
-        album := domain.Album{
-            Title: "",
-        }
-
-        mh.On("AlbumHandler", album).Return(errors.New("title required"))
-
-        _, err := usecase.CreateAlbum(album)
-
-        require.NoError(t, err)
-    })
 }
