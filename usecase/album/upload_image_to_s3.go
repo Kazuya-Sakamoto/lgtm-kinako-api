@@ -27,13 +27,15 @@ func (au *UploadImageToS3Usecase) UploadImageToS3(encodedImage []byte) (string, 
 	const cloudFrontURL = "https://d18g0hf2wnz3gs.cloudfront.net/"
 	awsBucket := os.Getenv("AWS_BUCKET")
 	awsProfile := os.Getenv("AWS_PROFILE")
-
+	if awsBucket == "" {
+		return "", fmt.Errorf("AWS_BUCKET environment variable is not set")
+	}
 	sess, err := session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 		Profile:           awsProfile,
 	})
 	if err != nil {
-		return "", err
+		return "failed to initialize AWS session: %w", err
 	}
 	svc := s3.New(sess)
 	currentDateTime := time.Now().Format("20060102150405")
@@ -47,7 +49,7 @@ func (au *UploadImageToS3Usecase) UploadImageToS3(encodedImage []byte) (string, 
 		ContentType: aws.String("image/jpeg"),
 	})
 	if err != nil {
-		return "", err
+		return "", fmt.Errorf("failed to upload image to S3: %w", err)
 	}
 	fmt.Println("S3にアップロードが完了")
 
