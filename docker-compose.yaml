@@ -1,13 +1,14 @@
 version: "3.8"
 services:
-  dev-postgres:
-    image: postgres:15.1-alpine
+  dev-mysql:
+    image: mysql:8.0
     ports:
-      - 5555:5432
+      - 3306:3306
     environment:
-      POSTGRES_USER: ${POSTGRES_USER}
-      POSTGRES_PASSWORD: ${POSTGRES_PW}
-      POSTGRES_DB: ${POSTGRES_DB}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DB}
+      MYSQL_PASSWORD: ${MYSQL_PW}
     restart: always
     networks:
       - lesson
