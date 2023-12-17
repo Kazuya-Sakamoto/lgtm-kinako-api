@@ -18,9 +18,19 @@ func NewDB() *gorm.DB {
 			log.Fatalln(err)
 		}
 	}
-	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
-		os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PW"),
-		os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DB"))
+	var dsn string
+	if os.Getenv("GO_ENV") == "dev" {
+		// ローカル開発環境用のDSN
+		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&tls=skip-verify",
+			os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PW"),
+			os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DB"))
+	} else {
+		// 本番環境用のDSN
+		dsn = fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local&tls=true",
+			os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PW"),
+			os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DB"))
+	}
+
 
 	config := &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
