@@ -6,7 +6,7 @@ import (
 	"os"
 
 	"github.com/joho/godotenv"
-	"gorm.io/driver/postgres"
+	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 )
@@ -18,18 +18,19 @@ func NewDB() *gorm.DB {
 			log.Fatalln(err)
 		}
 	}
-	url := fmt.Sprintf("host=%s port=%s user=%s dbname=%s password=%s sslmode=disable",
-		os.Getenv("POSTGRES_HOST"), os.Getenv("POSTGRES_PORT"),
-		os.Getenv("POSTGRES_USER"), os.Getenv("POSTGRES_DB"), os.Getenv("POSTGRES_PW"))
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:%s)/%s?charset=utf8mb4&parseTime=True&loc=Local",
+		os.Getenv("MYSQL_USER"), os.Getenv("MYSQL_PW"),
+		os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DB"))
+
 	config := &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info), 
+		Logger: logger.Default.LogMode(logger.Info),
 	}
 
-	db, err := gorm.Open(postgres.Open(url), config)
+	db, err := gorm.Open(mysql.Open(dsn), config)
 	if err != nil {
 		log.Fatalln(err)
 	}
-	fmt.Println("Connceted")
+	fmt.Println("Connected to MySQL")
 	return db
 }
 

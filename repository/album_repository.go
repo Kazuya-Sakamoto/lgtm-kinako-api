@@ -27,8 +27,8 @@ func (ar *albumRepository) GetAllAlbums(albums *[]domain.Album, userId uint) err
 }
 
 func (ar *albumRepository) GetRandomAlbums(albums *[]domain.Album) error {
-	if err := ar.db.Order("RANDOM()").Limit(8).Find(albums).Error; err != nil {
-			return err
+	if err := ar.db.Order("RAND()").Limit(8).Find(albums).Error; err != nil {
+		return err
 	}
 	return nil
 }
