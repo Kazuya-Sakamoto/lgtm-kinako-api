@@ -10,7 +10,7 @@ import (
 	"github.com/labstack/echo/v4/middleware"
 )
 
-func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *echo.Echo {
+func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc controller.ITagController) *echo.Echo {
 	logConfig := middleware.LoggerConfig{
 		Format: "${host}${uri} METHOD:${method} STATUS:${status} TIME:${time_rfc3339} LATENCY:${latency_human} ERROR:${error}\n",
 	}
@@ -57,6 +57,8 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController) *e
 	a.GET("", ac.GetAllAlbums)
 	a.POST("", ac.CreateAlbum)
 	a.DELETE("/:albumId", ac.DeleteAlbum)
+	// * Tag
+	e.GET("/tags", tc.GetTags)
 
 	return e
 }
