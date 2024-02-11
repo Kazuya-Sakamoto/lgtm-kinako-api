@@ -19,6 +19,7 @@ import (
 type IAlbumController interface {
 	GetAllAlbums(c echo.Context) error
 	GetRandomAlbums(c echo.Context) error
+	GetAlbums(c echo.Context) error
 	CreateAlbum(c echo.Context) error
 	DeleteAlbum(c echo.Context) error
 }
@@ -51,6 +52,27 @@ func (ac *albumController) GetRandomAlbums(c echo.Context) error {
 	return c.JSON(http.StatusOK, res)
 }
 
+func (ac *albumController) GetAlbums(c echo.Context) error {
+    id := c.QueryParam("tag")
+    if id != "" {
+        tagId, err := strconv.Atoi(id)
+        if err != nil {
+            return c.JSON(http.StatusBadRequest, "Invalid tagId format")
+        }
+        res, err := ac.au.GetAlbumsByTag(uint(tagId))
+        if err != nil {
+            return c.JSON(http.StatusInternalServerError, err.Error())
+        }
+
+        return c.JSON(http.StatusOK, res)
+    } else {
+        res, err := ac.au.GetRandomAlbums()
+        if err != nil {
+            return c.JSON(http.StatusInternalServerError, err.Error())
+        }
+        return c.JSON(http.StatusOK, res)
+    }
+}
 
 func (ac *albumController) CreateAlbum(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)

@@ -11,19 +11,19 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func setupGetAllAlbumsUsecase(t *testing.T) (*mock.MockAlbumRepository, *GetAllAlbumsUsecase, func()) {
+func setupGetAlbumsByTagUsecase(t *testing.T) (*mock.MockAlbumRepository, *GetAlbumsByTagUsecase, func()) {
 	mr := new(mock.MockAlbumRepository)
 	mh := new(mock.MockAlbumHandler)
-	usecase := NewGetAllAlbumsUsecase(mr, mh)
+	usecase := NewGetAlbumsByTagUsecase(mr, mh)
 
 	return mr, usecase, func() {
 		mr.AssertExpectations(t)
 	}
 }
 
-func Test_AlbumUsecase_GetAllAlbums(t *testing.T) {
+func Test_AlbumUsecase_GetAlbumsByTag(t *testing.T) {
 	t.Run("正常にアルバムが取得できること", func(t *testing.T) {
-		mr, usecase, cleanup := setupGetAllAlbumsUsecase(t)
+		mr, usecase, cleanup := setupGetAlbumsByTagUsecase(t)
 		defer cleanup()
 
 		ea := []domain.Album{
@@ -43,23 +43,16 @@ func Test_AlbumUsecase_GetAllAlbums(t *testing.T) {
 				CreatedAt: time.Now(),
 				UpdatedAt: time.Now(),
 			},
-			{
-				ID:        3,
-				Title:     "Title3",
-				Image:     "image3.jpg",
-				Tags:      []domain.Tag{},
-				CreatedAt: time.Now(),
-				UpdatedAt: time.Now(),
-			},
 		}
-		userId := uint(1)
 
-		mr.On("GetAllAlbums", testify_mock.AnythingOfType("*[]domain.Album"), userId).Run(func(args testify_mock.Arguments) {
+		mr.On("GetAlbumsByTag", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Album)
 			*arg = ea
-		}).Return(nil)
+		})
 
-		res, err := usecase.GetAllAlbums(userId)
+		tagId := uint(1)
+
+		res, err := usecase.GetAlbumsByTag(tagId)
 
 		require.NoError(t, err)
 		assert.Equal(t, len(ea), len(res))

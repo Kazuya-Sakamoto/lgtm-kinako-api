@@ -20,6 +20,11 @@ func (mu *MockAlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
     return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 
+func (mu *MockAlbumUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumResponse, error) {
+    args := mu.Called(tagId)
+    return args.Get(0).([]domain.AlbumResponse), args.Error(1)
+}
+
 func (mu *MockAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
     args := mu.Called(album)
     return args.Get(0).(domain.AlbumResponse), args.Error(1)
