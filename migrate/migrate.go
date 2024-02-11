@@ -53,6 +53,15 @@ func migrateDB(db *gorm.DB) {
 				return nil
 			},
 		},
+		{
+			ID: "003_create_tag_table",
+			Migrate: func(tx *gorm.DB) error {
+				return tx.AutoMigrate(&domain.Tag{})
+			},
+			Rollback: func(tx *gorm.DB) error {
+				return tx.Migrator().DropTable(&domain.Tag{})
+			},
+		},
 	})
 
 	if err := m.Migrate(); err != nil {

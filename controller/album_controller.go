@@ -96,7 +96,7 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "Unsupported image format: フォーマットがJPEGではありません")
 	}
 
-	//* アップロードする画像データ
+	//* 画像の加工
 	encodedImage, err := ac.ipu.ProcessImage(decodedImage)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
