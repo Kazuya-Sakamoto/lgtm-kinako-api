@@ -30,6 +30,14 @@ func (m *MockAlbumRepository) GetRandomAlbums(albums *[]domain.Album) error {
     return args.Error(0)
 }
 
+func (m *MockAlbumRepository) GetAlbumsByTag(albums *[]domain.Album, tagId uint) error {
+    args := m.Called(albums)
+    if args.Get(0) != nil {
+        *albums = args.Get(0).([]domain.Album)
+    }
+    return args.Error(0)
+}
+
 func (m *MockAlbumRepository) CreateAlbum(album *domain.Album) error {
 	args := m.Called(album)
 	return args.Error(0)

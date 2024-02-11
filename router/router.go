@@ -49,12 +49,13 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc
 	e.GET("/csrf", uc.CsrfToken)
 	// * Album
 	a := e.Group("/album")
+	a.GET("", ac.GetAlbums)
 	a.GET("/random", ac.GetRandomAlbums)
 	a.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
-	a.GET("", ac.GetAllAlbums)
+	a.GET("/all", ac.GetAllAlbums)
 	a.POST("", ac.CreateAlbum)
 	a.DELETE("/:albumId", ac.DeleteAlbum)
 	// * Tag

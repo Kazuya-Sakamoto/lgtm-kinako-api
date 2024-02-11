@@ -26,6 +26,7 @@ func (au *GetRandomAlbumsUsecase) GetRandomAlbums() ([]domain.AlbumResponse, err
 			ID:          v.ID,
 			Title:       v.Title,
 			Image: 		 v.Image,
+			Tags: 	  	 v.Tags,
 			CreatedAt:   v.CreatedAt,
 			UpdatedAt:   v.UpdatedAt,
 		}

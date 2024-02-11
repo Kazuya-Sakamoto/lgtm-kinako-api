@@ -28,7 +28,7 @@ func migrateDB(db *gorm.DB) {
 			},
 		},
 		{
-			ID: "002_create_albums",
+			ID: "002_create_albums_table",
 			Migrate: func(tx *gorm.DB) error {
 				return tx.AutoMigrate(&domain.Album{})
 			},
@@ -54,12 +54,21 @@ func migrateDB(db *gorm.DB) {
 			},
 		},
 		{
-			ID: "003_create_tag_table",
+			ID: "003_create_tags_table",
 			Migrate: func(tx *gorm.DB) error {
 				return tx.AutoMigrate(&domain.Tag{})
 			},
 			Rollback: func(tx *gorm.DB) error {
 				return tx.Migrator().DropTable(&domain.Tag{})
+			},
+		},
+		{
+			ID: "004_album_tags_table",
+			Migrate: func(tx *gorm.DB) error {
+				return tx.AutoMigrate(&domain.AlbumTag{})
+			},
+			Rollback: func(tx *gorm.DB) error {
+				return tx.Migrator().DropTable(&domain.AlbumTag{})
 			},
 		},
 	})

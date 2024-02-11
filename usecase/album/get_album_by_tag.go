@@ -6,18 +6,18 @@ import (
 	"lgtm-kinako-api/repository"
 )
 
-type GetAllAlbumsUsecase struct {
+type GetAlbumsByTagUsecase struct {
 	ar repository.IAlbumRepository
 	ah handler.IAlbumHandler
 }
 
-func NewGetAllAlbumsUsecase(ar repository.IAlbumRepository, ah handler.IAlbumHandler) *GetAllAlbumsUsecase {
-	return &GetAllAlbumsUsecase{ar, ah}
+func NewGetAlbumsByTagUsecase(ar repository.IAlbumRepository, ah handler.IAlbumHandler) *GetAlbumsByTagUsecase {
+	return &GetAlbumsByTagUsecase{ar, ah}
 }
 
-func (au *GetAllAlbumsUsecase) GetAllAlbums(userId uint) ([]domain.AlbumResponse, error) {
+func (au *GetAlbumsByTagUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumResponse, error) {
 	albums := []domain.Album{}
-	if err := au.ar.GetAllAlbums(&albums, userId); err != nil {
+	if err := au.ar.GetAlbumsByTag(&albums, tagId); err != nil {
 		return nil, err
 	}
 	res := []domain.AlbumResponse{}

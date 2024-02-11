@@ -9,6 +9,7 @@ import (
 type AlbumUsecase struct {
 	GetAllAlbumsUsecase 	*GetAllAlbumsUsecase
 	GetRandomAlbumsUsecase  *GetRandomAlbumsUsecase
+	GetAlbumsByTagUsecase   *GetAlbumsByTagUsecase
 	UploadImageToS3Usecase  *UploadImageToS3Usecase
 	CreateAlbumUsecase	    *CreateAlbumUsecase
 	DeleteAlbumUsecase	    *DeleteAlbumUsecase
@@ -18,6 +19,7 @@ func NewAlbumUsecase(ar repository.IAlbumRepository, uh handler.IAlbumHandler) *
 	return &AlbumUsecase{
 		GetAllAlbumsUsecase: 	NewGetAllAlbumsUsecase(ar, uh),
 		GetRandomAlbumsUsecase: NewGetRandomAlbumsUsecase(ar, uh),
+		GetAlbumsByTagUsecase:  NewGetAlbumsByTagUsecase(ar, uh),
 		UploadImageToS3Usecase: NewUploadImageToS3Usecase(ar, uh),
 		CreateAlbumUsecase:  	NewCreateAlbumUsecase(ar, uh),
 		DeleteAlbumUsecase: 	NewDeleteAlbumUsecase(ar),
@@ -30,6 +32,10 @@ func (au *AlbumUsecase) GetAllAlbums(userId uint) ([]domain.AlbumResponse, error
 
 func (au *AlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
 	return au.GetRandomAlbumsUsecase.GetRandomAlbums()
+}
+
+func (au *AlbumUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumResponse, error) {
+	return au.GetAlbumsByTagUsecase.GetAlbumsByTag(tagId)
 }
 
 func (au *AlbumUsecase) UploadImageToS3(encodedImage []byte) (string, error) {
