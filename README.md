@@ -92,3 +92,11 @@ $ curl http://localhost:8080/album/random
 
 [{"id":107,"title":"初めてのきなこ","image":"...
 ```
+
+## その他ドキュメント
+
+こちらは閲覧権限が限られています。@Kazuya-Sakamoto に権限依頼をお願いします 🙇‍♂️
+
+- [planetscale でデプロイ方法](https://www.notion.so/planetscale-c49789ce45c741f495a5861312592a21)
+- [【Sequel Ace】MySQL GUI クライアントアプリの接続方法](https://www.notion.so/Sequel-Ace-MySQL-GUI-b5f8159e78f043a1beec7d083116da44)
+- [.env ファイルについて](https://www.notion.so/env-ad6e94f9e5ef4247ab9e5295bfb00c13)

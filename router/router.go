@@ -43,23 +43,28 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc
 		// CookieSameSite: http.SameSiteDefaultMode,
 		//CookieMaxAge:   60,
 	}))
-	// * User
-	e.POST("/signup", uc.SignUp)
-	e.POST("/login", uc.LogIn)
-	e.GET("/csrf", uc.CsrfToken)
-	// * Album
-	a := e.Group("/album")
-	a.GET("", ac.GetAlbums)
-	a.GET("/random", ac.GetRandomAlbums)
-	a.Use(echojwt.WithConfig(echojwt.Config{
+
+	//* API Version 1 Group
+	v1 := e.Group("/api/v1")
+
+	// * User Routes
+	v1.POST("/signup", uc.SignUp)
+	v1.POST("/login", uc.LogIn)
+	v1.GET("/csrf", uc.CsrfToken)
+
+	// * Album Routes
+	albums := v1.Group("/albums")
+	albums.GET("", ac.GetAlbums)
+	albums.GET("/random", ac.GetRandomAlbums)
+	albums.Use(echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
-	a.GET("/all", ac.GetAllAlbums)
-	a.POST("", ac.CreateAlbum)
-	a.DELETE("/:albumId", ac.DeleteAlbum)
-	// * Tag
-	e.GET("/tags", tc.GetTags)
+	albums.GET("/all", ac.GetAllAlbums)
+	albums.POST("", ac.CreateAlbum)
+	albums.DELETE("/:albumId", ac.DeleteAlbum)
+	// * Tag Routes
+	v1.GET("/tags", tc.GetTags)
 
 	return e
 }
