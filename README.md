@@ -88,7 +88,7 @@ $ GO_ENV=dev air
 - 動作確認
 
 ```
-$ curl http://localhost:8080/album/random
+$ curl http://localhost:8080/api/v1/albums
 
 [{"id":107,"title":"初めてのきなこ","image":"...
 ```
