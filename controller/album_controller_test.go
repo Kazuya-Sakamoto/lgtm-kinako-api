@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/usecase/album"
-	"lgtm-kinako-api/usecase/album/mock"
+	"lgtm-kinako-api/usecase/mock"
 	"net/http"
 	"net/http/httptest"
 	"testing"

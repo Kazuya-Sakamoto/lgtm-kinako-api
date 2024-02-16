@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"lgtm-kinako-api/domain"
-	"lgtm-kinako-api/usecase/user/mock"
+	"lgtm-kinako-api/usecase/mock"
 	"net/http"
 	"net/http/httptest"
 	"strings"

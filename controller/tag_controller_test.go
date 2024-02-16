@@ -3,8 +3,8 @@ package controller
 import (
 	"encoding/json"
 	"lgtm-kinako-api/domain"
+	"lgtm-kinako-api/usecase/mock"
 	"lgtm-kinako-api/usecase/tag"
-	"lgtm-kinako-api/usecase/tag/mock"
 	"net/http"
 	"net/http/httptest"
 	"testing"
