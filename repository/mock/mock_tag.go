@@ -20,3 +20,20 @@ func (m *MockTagRepository) GetTags(tags *[]domain.Tag) error {
     }
     return args.Error(0)
 }
+
+func (m *MockTagRepository) CreateTag(tag *domain.Tag) error {
+	args := m.Called(tag)
+	return args.Error(0)
+}
+
+/*
+	handler
+*/
+type MockTagHandler struct {
+	mock.Mock
+}
+
+func (m *MockTagHandler) TagHandler(tag domain.Tag) error {
+	args := m.Called(tag)
+	return args.Error(0)
+}

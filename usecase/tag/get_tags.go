@@ -2,15 +2,17 @@ package tag
 
 import (
 	"lgtm-kinako-api/domain"
+	"lgtm-kinako-api/handler"
 	"lgtm-kinako-api/repository"
 )
 
 type GetTagsUsecase struct {
 	tr repository.ITagRepository
+	th handler.ITagHandler
 }
 
-func NewGetTagsUsecase(tr repository.ITagRepository) *GetTagsUsecase {
-	return &GetTagsUsecase{tr}
+func NewGetTagsUsecase(tr repository.ITagRepository, th handler.ITagHandler) *GetTagsUsecase {
+	return &GetTagsUsecase{tr, th}
 }
 
 func (tu *GetTagsUsecase) GetTags() ([]domain.TagResponse, error) {

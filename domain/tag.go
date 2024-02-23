@@ -12,4 +12,5 @@ type TagResponse struct {
 
 type ITagRepository interface {
 	GetTags(tags *[]Tag) error
+	CreateTag(tag *Tag) error
 }

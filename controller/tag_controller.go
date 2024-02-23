@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/usecase/tag"
 	"net/http"
 
@@ -9,6 +10,7 @@ import (
 
 type ITagController interface {
 	GetTags(c echo.Context) error
+	CreateTag(c echo.Context) error
 }
 
 type tagController struct {
@@ -25,4 +27,17 @@ func (tc *tagController) GetTags(c echo.Context) error {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
 	return c.JSON(http.StatusOK, res)
+}
+
+func (tc *tagController) CreateTag(c echo.Context) error {
+	tag := domain.Tag{}
+	if err := c.Bind(&tag); err != nil {
+		return c.JSON(http.StatusBadRequest, err.Error())
+	}
+
+	res, err := tc.tu.CreateTag(tag)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
+	return c.JSON(http.StatusCreated, res)
 }

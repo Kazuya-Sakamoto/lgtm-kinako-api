@@ -14,3 +14,8 @@ func (mu *MockTagUsecase) GetTags() ([]domain.TagResponse, error) {
     args := mu.Called()
     return args.Get(0).([]domain.TagResponse), args.Error(1)
 }
+
+func (mu *MockTagUsecase) CreateTag(tag domain.Tag) (domain.TagResponse, error) {
+    args := mu.Called(tag)
+    return args.Get(0).(domain.TagResponse), args.Error(1)
+}
