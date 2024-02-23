@@ -20,3 +20,10 @@ func (tr *tagRepository) GetTags(tags *[]domain.Tag) error {
 	}
 	return nil
 }
+
+func (tr *tagRepository) CreateTag(tag *domain.Tag) error {
+	if err := tr.db.Create(tag).Error; err != nil {
+		return err
+	}
+	return nil
+}

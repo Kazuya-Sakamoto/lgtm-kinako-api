@@ -12,4 +12,6 @@ var (
     ErrInvalidEmailFormat  = errors.New("handler error: is not valid email format")
     ErrPasswordRequired    = errors.New("handler error: password is required")
     ErrPasswordLength      = errors.New("handler error: limited min 6 max 30 char")
+    ErrTagRequired         = errors.New("handler error: tag is required")
+    ErrTagLength           = errors.New("handler error: limited max 10 char")
 )

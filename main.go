@@ -19,6 +19,7 @@ func main() {
 	*/
 	userHandler := handler.NewUserHandler()
 	albumHandler := handler.NewAlbumHandler()
+	tagHandler := handler.NewTagHandler()
 	/* 
 		Repository
 	*/
@@ -31,7 +32,7 @@ func main() {
 	albumUsecase := album.NewAlbumUsecase(albumRepository, albumHandler)
 	userUsecase := user.NewUserUsecase(userRepository, userHandler)
 	imageProcessorUsecase := image_processor.NewImageProcessorUsecase()
-	tagUsecase := tag.NewTagUsecase(tagRepository)
+	tagUsecase := tag.NewTagUsecase(tagRepository, tagHandler)
 	/* 
 		Controller
 	*/

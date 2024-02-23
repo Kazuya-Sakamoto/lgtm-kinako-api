@@ -12,7 +12,8 @@ import (
 
 func setupGetTagsUsecase(t *testing.T) (*mock.MockTagRepository, *GetTagsUsecase, func()) {
 	tr := new(mock.MockTagRepository)
-	usecase := NewGetTagsUsecase(tr)
+	th := new(mock.MockTagHandler)
+	usecase := NewGetTagsUsecase(tr, th)
 
 	return tr, usecase, func() {
 		tr.AssertExpectations(t)

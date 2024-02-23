@@ -64,7 +64,13 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc
 	albums.POST("", ac.CreateAlbum)
 	albums.DELETE("/:albumId", ac.DeleteAlbum)
 	// * Tag Routes
-	v1.GET("/tags", tc.GetTags)
+	tags := v1.Group("/tags")
+	tags.GET("", tc.GetTags)
+	tags.Use(echojwt.WithConfig(echojwt.Config{
+		SigningKey:  []byte(os.Getenv("SECRET")),
+		TokenLookup: "cookie:token",
+	}))
+	tags.POST("", tc.CreateTag)
 
 	return e
 }
