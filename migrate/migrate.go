@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	"lgtm-kinako-api/db"
 	"lgtm-kinako-api/domain"
 

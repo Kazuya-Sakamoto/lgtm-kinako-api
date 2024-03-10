@@ -5,12 +5,13 @@ import (
 	"encoding/base64"
 	"fmt"
 	"image"
-	"lgtm-kinako-api/domain"
-	"lgtm-kinako-api/usecase/album"
-	"lgtm-kinako-api/usecase/image_processor"
 	"net/http"
 	"strconv"
 	"strings"
+
+	"lgtm-kinako-api/domain"
+	"lgtm-kinako-api/usecase/album"
+	"lgtm-kinako-api/usecase/image_processor"
 
 	"github.com/golang-jwt/jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -53,25 +54,25 @@ func (ac *albumController) GetRandomAlbums(c echo.Context) error {
 }
 
 func (ac *albumController) GetAlbums(c echo.Context) error {
-    id := c.QueryParam("tag")
-    if id != "" {
-        tagId, err := strconv.Atoi(id)
-        if err != nil {
-            return c.JSON(http.StatusBadRequest, "Invalid tagId format")
-        }
-        res, err := ac.au.GetAlbumsByTag(uint(tagId))
-        if err != nil {
-            return c.JSON(http.StatusInternalServerError, err.Error())
-        }
+	id := c.QueryParam("tag")
+	if id != "" {
+		tagId, err := strconv.Atoi(id)
+		if err != nil {
+			return c.JSON(http.StatusBadRequest, "Invalid tagId format")
+		}
+		res, err := ac.au.GetAlbumsByTag(uint(tagId))
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
 
-        return c.JSON(http.StatusOK, res)
-    } else {
-        res, err := ac.au.GetRandomAlbums()
-        if err != nil {
-            return c.JSON(http.StatusInternalServerError, err.Error())
-        }
-        return c.JSON(http.StatusOK, res)
-    }
+		return c.JSON(http.StatusOK, res)
+	} else {
+		res, err := ac.au.GetRandomAlbums()
+		if err != nil {
+			return c.JSON(http.StatusInternalServerError, err.Error())
+		}
+		return c.JSON(http.StatusOK, res)
+	}
 }
 
 func (ac *albumController) CreateAlbum(c echo.Context) error {
@@ -128,15 +129,14 @@ func (ac *albumController) CreateAlbum(c echo.Context) error {
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}
-    album.Image = objectURL
-    res, err := ac.au.CreateAlbum(album)
-    if err != nil {
-        return c.JSON(http.StatusInternalServerError, err.Error())
-    }
+	album.Image = objectURL
+	res, err := ac.au.CreateAlbum(album)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, err.Error())
+	}
 
-    return c.JSON(http.StatusCreated, res)
+	return c.JSON(http.StatusCreated, res)
 }
-
 
 func (ac *albumController) DeleteAlbum(c echo.Context) error {
 	user := c.Get("user").(*jwt.Token)

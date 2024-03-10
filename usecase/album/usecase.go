@@ -7,22 +7,22 @@ import (
 )
 
 type AlbumUsecase struct {
-	GetAllAlbumsUsecase 	*GetAllAlbumsUsecase
-	GetRandomAlbumsUsecase  *GetRandomAlbumsUsecase
-	GetAlbumsByTagUsecase   *GetAlbumsByTagUsecase
-	UploadImageToS3Usecase  *UploadImageToS3Usecase
-	CreateAlbumUsecase	    *CreateAlbumUsecase
-	DeleteAlbumUsecase	    *DeleteAlbumUsecase
+	GetAllAlbumsUsecase    *GetAllAlbumsUsecase
+	GetRandomAlbumsUsecase *GetRandomAlbumsUsecase
+	GetAlbumsByTagUsecase  *GetAlbumsByTagUsecase
+	UploadImageToS3Usecase *UploadImageToS3Usecase
+	CreateAlbumUsecase     *CreateAlbumUsecase
+	DeleteAlbumUsecase     *DeleteAlbumUsecase
 }
 
 func NewAlbumUsecase(ar repository.IAlbumRepository, uh handler.IAlbumHandler) *AlbumUsecase {
 	return &AlbumUsecase{
-		GetAllAlbumsUsecase: 	NewGetAllAlbumsUsecase(ar, uh),
+		GetAllAlbumsUsecase:    NewGetAllAlbumsUsecase(ar, uh),
 		GetRandomAlbumsUsecase: NewGetRandomAlbumsUsecase(ar, uh),
 		GetAlbumsByTagUsecase:  NewGetAlbumsByTagUsecase(ar, uh),
 		UploadImageToS3Usecase: NewUploadImageToS3Usecase(ar, uh),
-		CreateAlbumUsecase:  	NewCreateAlbumUsecase(ar, uh),
-		DeleteAlbumUsecase: 	NewDeleteAlbumUsecase(ar),
+		CreateAlbumUsecase:     NewCreateAlbumUsecase(ar, uh),
+		DeleteAlbumUsecase:     NewDeleteAlbumUsecase(ar),
 	}
 }
 

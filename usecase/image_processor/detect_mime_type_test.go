@@ -14,7 +14,7 @@ func TestDetectMimeType(t *testing.T) {
 		mimeType, err := ip.DetectMimeType(data)
 		require.NoError(t, err)
 		require.Equal(t, "data:image/jpeg", mimeType)
-	})	
+	})
 
 	t.Run("無効なデータフォーマットの場合", func(t *testing.T) {
 		data := "invalid_data_format"

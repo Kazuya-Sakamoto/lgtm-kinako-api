@@ -23,12 +23,12 @@ func (au *GetAlbumsByTagUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumRespo
 	res := []domain.AlbumResponse{}
 	for _, v := range albums {
 		a := domain.AlbumResponse{
-			ID:          v.ID,
-			Title:       v.Title,
-			Image: 		 v.Image,
-			Tags: 	  	 v.Tags,
-			CreatedAt:   v.CreatedAt,
-			UpdatedAt:   v.UpdatedAt,
+			ID:        v.ID,
+			Title:     v.Title,
+			Image:     v.Image,
+			Tags:      v.Tags,
+			CreatedAt: v.CreatedAt,
+			UpdatedAt: v.UpdatedAt,
 		}
 		res = append(res, a)
 	}

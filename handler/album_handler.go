@@ -16,7 +16,6 @@ func NewAlbumHandler() IAlbumHandler {
 	return &albumHandler{}
 }
 
-
 func (ah *albumHandler) AlbumHandler(album domain.Album) error {
 	return handler.ValidateStruct(&album,
 		handler.Field(

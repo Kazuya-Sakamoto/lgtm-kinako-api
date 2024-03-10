@@ -2,8 +2,9 @@ package album
 
 import (
 	"errors"
-	"lgtm-kinako-api/repository/mock"
 	"testing"
+
+	"lgtm-kinako-api/repository/mock"
 
 	"github.com/aws/aws-sdk-go/service/s3"
 	testify_mock "github.com/stretchr/testify/mock"

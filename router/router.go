@@ -1,9 +1,10 @@
 package router
 
 import (
-	"lgtm-kinako-api/controller"
 	"net/http"
 	"os"
+
+	"lgtm-kinako-api/controller"
 
 	echojwt "github.com/labstack/echo-jwt/v4"
 	"github.com/labstack/echo/v4"
@@ -29,8 +30,10 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc
 
 	e.Use(middleware.CORSWithConfig(middleware.CORSConfig{
 		AllowOrigins: []string{"http://localhost:3000", os.Getenv("FE_URL")},
-		AllowHeaders: []string{echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
-			echo.HeaderAccessControlAllowHeaders, echo.HeaderXCSRFToken},
+		AllowHeaders: []string{
+			echo.HeaderOrigin, echo.HeaderContentType, echo.HeaderAccept,
+			echo.HeaderAccessControlAllowHeaders, echo.HeaderXCSRFToken,
+		},
 		AllowMethods:     []string{"GET", "PUT", "POST", "DELETE"},
 		AllowCredentials: true,
 	}))
@@ -39,9 +42,9 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc
 		CookieDomain:   os.Getenv("API_DOMAIN"),
 		CookieHTTPOnly: true,
 		CookieSameSite: http.SameSiteNoneMode,
-		CookieSecure: true,
+		CookieSecure:   true,
 		// CookieSameSite: http.SameSiteDefaultMode,
-		//CookieMaxAge:   60,
+		// CookieMaxAge:   60,
 	}))
 
 	//* API Version 1 Group
@@ -71,6 +74,7 @@ func NewRouter(ac controller.IAlbumController, uc controller.IUserController, tc
 		TokenLookup: "cookie:token",
 	}))
 	tags.POST("", tc.CreateTag)
+	tags.DELETE("/:tagId", tc.DeleteTag)
 
 	return e
 }

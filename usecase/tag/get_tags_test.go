@@ -1,9 +1,10 @@
 package tag
 
 import (
+	"testing"
+
 	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/repository/mock"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	testify_mock "github.com/stretchr/testify/mock"
@@ -27,12 +28,12 @@ func Test_TagUsecase_GetTags(t *testing.T) {
 
 		ea := []domain.Tag{
 			{
-				ID:        1,
-				Name:      "Name1",
+				ID:   1,
+				Name: "Name1",
 			},
 			{
-				ID:        2,
-				Name:      "Name2",
+				ID:   2,
+				Name: "Name2",
 			},
 		}
 

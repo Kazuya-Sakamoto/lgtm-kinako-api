@@ -3,10 +3,11 @@ package album
 import (
 	"bytes"
 	"fmt"
-	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/repository"
 	"os"
 	"time"
+
+	"lgtm-kinako-api/handler"
+	"lgtm-kinako-api/repository"
 
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"

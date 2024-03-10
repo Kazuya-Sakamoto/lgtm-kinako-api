@@ -27,3 +27,11 @@ func (tr *tagRepository) CreateTag(tag *domain.Tag) error {
 	}
 	return nil
 }
+
+func (tr *tagRepository) DeleteTag(tagId uint) error {
+	result := tr.db.Where("id=?", tagId).Delete(&domain.Tag{})
+	if result.Error != nil {
+		return result.Error
+	}
+	return nil
+}

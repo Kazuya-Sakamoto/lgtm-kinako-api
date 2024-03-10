@@ -1,11 +1,12 @@
 package user
 
 import (
+	"os"
+	"time"
+
 	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/handler"
 	"lgtm-kinako-api/repository"
-	"os"
-	"time"
 
 	"github.com/golang-jwt/jwt"
 	"golang.org/x/crypto/bcrypt"

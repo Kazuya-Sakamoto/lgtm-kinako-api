@@ -7,7 +7,6 @@ import (
 	"github.com/go-ozzo/ozzo-validation/v4/is"
 )
 
-
 type IUserHandler interface {
 	UserHandler(user domain.User) error
 }

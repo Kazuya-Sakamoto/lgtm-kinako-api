@@ -31,7 +31,6 @@ func NewDB() *gorm.DB {
 			os.Getenv("MYSQL_HOST"), os.Getenv("MYSQL_PORT"), os.Getenv("MYSQL_DB"))
 	}
 
-
 	config := &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 	}

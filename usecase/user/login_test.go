@@ -2,11 +2,12 @@ package user
 
 import (
 	"errors"
-	"lgtm-kinako-api/domain"
-	"lgtm-kinako-api/repository/mock"
 	"os"
 	"testing"
 	"time"
+
+	"lgtm-kinako-api/domain"
+	"lgtm-kinako-api/repository/mock"
 
 	"github.com/golang-jwt/jwt"
 	"github.com/stretchr/testify/assert"
@@ -42,18 +43,18 @@ func Test_UserUsecase_Login(t *testing.T) {
 			Email:    "test@test.com",
 			Password: "$2a$10$98.1xBaze.nkLmN6wRCYGe8/j3kVsOGLICaEHK6zs37AQNCkW8uQq",
 		}
-		/* 
+		/*
 			モックの期待値の設定
 		*/
 		mh.On("UserHandler", input).Return(nil)
 		mr.On("GetUserByEmail", &domain.User{}, input.Email).Return(user, nil)
-		/* 
+		/*
 			ログインの実行
 		*/
 		token, err := usecase.Login(input)
 		require.NoError(t, err)
 		require.NotEmpty(t, token)
-		/* 
+		/*
 			トークンの解析
 		*/
 		parsedToken, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
@@ -61,7 +62,7 @@ func Test_UserUsecase_Login(t *testing.T) {
 		})
 		require.NoError(t, err)
 		require.True(t, parsedToken.Valid)
-		/* 
+		/*
 			トークンのクレームの検証
 		*/
 		now := time.Now().Unix()
@@ -85,18 +86,18 @@ func Test_UserUsecase_Login(t *testing.T) {
 			Email:    "xxx@test.com",
 			Password: "xxxpassword",
 		}
-		/* 
+		/*
 			ユーザーが見つからない場合のモックの設定
 		*/
 		mh.On("UserHandler", input).Return(nil)
 		mr.On("GetUserByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
-		/* 
+		/*
 			ログインの実行
 		*/
 		_, err := usecase.Login(input)
 		require.Error(t, err)
 		assert.Contains(t, err.Error(), "user not found")
-		/* 
+		/*
 			モックの検証
 		*/
 		mh.AssertExpectations(t)

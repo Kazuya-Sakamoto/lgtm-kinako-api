@@ -1,8 +1,9 @@
 package album
 
 import (
-	"lgtm-kinako-api/repository/mock"
 	"testing"
+
+	"lgtm-kinako-api/repository/mock"
 
 	"github.com/stretchr/testify/require"
 )

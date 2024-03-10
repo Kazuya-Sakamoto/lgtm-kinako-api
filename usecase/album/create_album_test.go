@@ -1,10 +1,11 @@
 package album
 
 import (
-	"lgtm-kinako-api/domain"
-	"lgtm-kinako-api/repository/mock"
 	"testing"
 	"time"
+
+	"lgtm-kinako-api/domain"
+	"lgtm-kinako-api/repository/mock"
 
 	"github.com/stretchr/testify/require"
 )

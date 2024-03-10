@@ -1,9 +1,10 @@
 package user
 
 import (
+	"testing"
+
 	"lgtm-kinako-api/domain"
 	"lgtm-kinako-api/repository/mock"
-	"testing"
 
 	"github.com/stretchr/testify/assert"
 	testifyMock "github.com/stretchr/testify/mock"

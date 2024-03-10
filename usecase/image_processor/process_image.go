@@ -14,7 +14,7 @@ const (
 	defaultFontSize = 4.8
 	defaultText     = "LGTM-kinako"
 	fontName        = "Vibur-Regular.ttf"
-	targetHeight	= 15.0
+	targetHeight    = 15.0
 )
 
 type imageProcessorUsecase struct{}

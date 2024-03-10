@@ -19,4 +19,3 @@ func (mu *MockUserUsecase) Login(user domain.User) (string, error) {
 	args := mu.Called(user)
 	return args.String(0), args.Error(1)
 }
-

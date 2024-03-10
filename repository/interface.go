@@ -19,3 +19,7 @@ type IAlbumRepository interface {
 type ITagRepository interface {
 	domain.ITagRepository
 }
+
+type IAlbumtagRepository interface {
+	domain.IAlbumTagRepository
+}

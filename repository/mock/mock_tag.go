@@ -26,6 +26,12 @@ func (m *MockTagRepository) CreateTag(tag *domain.Tag) error {
 	return args.Error(0)
 }
 
+func (m *MockTagRepository) DeleteTag(tagId uint) error {
+	args := m.Called(tagId)
+	return args.Error(0)
+}
+
+
 /*
 	handler
 */
