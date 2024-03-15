@@ -1,7 +1,7 @@
 {
   "go.useLanguageServer": true,
   "editor.tabSize": 4,
-  "workbench.colorTheme": "GitHub Dark Default",
+  "workbench.colorTheme": "Dracula Soft",
   "gopls": {
     "formatting.gofumpt": true,
     "ui.diagnostic.staticcheck": true

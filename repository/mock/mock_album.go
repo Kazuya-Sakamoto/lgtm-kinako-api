@@ -7,15 +7,14 @@ import (
 )
 
 /*
-	repository
+repository
 */
 type MockAlbumRepository struct {
 	mock.Mock
 }
 
-
-func (m *MockAlbumRepository) GetAllAlbums(albums *[]domain.Album, userId uint) error {
-	args := m.Called(albums, userId)
+func (m *MockAlbumRepository) GetAllAlbums(albums *[]domain.Album) error {
+	args := m.Called(albums)
 	if args.Get(0) != nil {
 		*albums = args.Get(0).([]domain.Album)
 	}
@@ -23,19 +22,19 @@ func (m *MockAlbumRepository) GetAllAlbums(albums *[]domain.Album, userId uint) 
 }
 
 func (m *MockAlbumRepository) GetRandomAlbums(albums *[]domain.Album) error {
-    args := m.Called(albums)
-    if args.Get(0) != nil {
-        *albums = args.Get(0).([]domain.Album)
-    }
-    return args.Error(0)
+	args := m.Called(albums)
+	if args.Get(0) != nil {
+		*albums = args.Get(0).([]domain.Album)
+	}
+	return args.Error(0)
 }
 
 func (m *MockAlbumRepository) GetAlbumsByTag(albums *[]domain.Album, tagId uint) error {
-    args := m.Called(albums)
-    if args.Get(0) != nil {
-        *albums = args.Get(0).([]domain.Album)
-    }
-    return args.Error(0)
+	args := m.Called(albums)
+	if args.Get(0) != nil {
+		*albums = args.Get(0).([]domain.Album)
+	}
+	return args.Error(0)
 }
 
 func (m *MockAlbumRepository) CreateAlbum(album *domain.Album) error {
@@ -49,7 +48,7 @@ func (m *MockAlbumRepository) DeleteAlbum(userId, albumId uint) error {
 }
 
 /*
-	handler
+handler
 */
 type MockAlbumHandler struct {
 	mock.Mock
