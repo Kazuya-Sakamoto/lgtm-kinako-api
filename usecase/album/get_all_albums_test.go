@@ -53,14 +53,13 @@ func Test_AlbumUsecase_GetAllAlbums(t *testing.T) {
 				UpdatedAt: time.Now(),
 			},
 		}
-		userId := uint(1)
 
-		mr.On("GetAllAlbums", testify_mock.AnythingOfType("*[]domain.Album"), userId).Run(func(args testify_mock.Arguments) {
+		mr.On("GetAllAlbums", testify_mock.AnythingOfType("*[]domain.Album")).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Album)
 			*arg = ea
 		}).Return(nil)
 
-		res, err := usecase.GetAllAlbums(userId)
+		res, err := usecase.GetAllAlbums()
 
 		require.NoError(t, err)
 		assert.Equal(t, len(ea), len(res))

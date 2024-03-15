@@ -35,10 +35,7 @@ func NewAlbumController(au album.IAlbumUsecase, ipu image_processor.IImageProces
 }
 
 func (ac *albumController) GetAllAlbums(c echo.Context) error {
-	user := c.Get("user").(*jwt.Token)
-	claims := user.Claims.(jwt.MapClaims)
-	userId := claims["user_id"]
-	res, err := ac.au.GetAllAlbums(uint(userId.(float64)))
+	res, err := ac.au.GetAllAlbums()
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

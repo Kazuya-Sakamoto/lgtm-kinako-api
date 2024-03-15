@@ -26,8 +26,8 @@ func NewAlbumUsecase(ar repository.IAlbumRepository, uh handler.IAlbumHandler) *
 	}
 }
 
-func (au *AlbumUsecase) GetAllAlbums(userId uint) ([]domain.AlbumResponse, error) {
-	return au.GetAllAlbumsUsecase.GetAllAlbums(userId)
+func (au *AlbumUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
+	return au.GetAllAlbumsUsecase.GetAllAlbums()
 }
 
 func (au *AlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {

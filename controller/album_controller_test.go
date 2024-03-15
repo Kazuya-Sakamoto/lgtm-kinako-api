@@ -51,7 +51,7 @@ func Test_AlbumController_GetAllAlbums(t *testing.T) {
 		},
 	}
 	mau := new(mock.MockAlbumUsecase)
-	mau.On("GetAllAlbums", uint(1)).Return(expectedAlbums, nil)
+	mau.On("GetAllAlbums").Return(expectedAlbums, nil)
 	_, rec, c, controller := setupAlbumControllerTest(mau, "/album")
 	setJWTToken(c, 1)
 
