@@ -42,7 +42,8 @@ func main() {
 	albumController := controller.NewAlbumController(albumUsecase, imageProcessorUsecase)
 	userController := controller.NewUserController(userUsecase)
 	tagController := controller.NewTagController(tagUsecase, albumTagUsecase)
+	albumTagController := controller.NewAlbumTagController(albumTagUsecase)
 
-	e := router.NewRouter(albumController, userController, tagController)
+	e := router.NewRouter(albumController, userController, tagController, albumTagController)
 	e.Logger.Fatal(e.Start(":8080"))
 }

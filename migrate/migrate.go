@@ -72,6 +72,19 @@ func migrateDB(db *gorm.DB) {
 				return tx.Migrator().DropTable(&domain.AlbumTag{})
 			},
 		},
+		{
+			ID: "005_add_unique_constraint_to_album_tags",
+			Migrate: func(tx *gorm.DB) error {
+				err := tx.Exec("ALTER TABLE `album_tags` ADD CONSTRAINT `album_tag_unique` UNIQUE (`album_id`, `tag_id`)").Error
+				if err != nil {
+					return err
+				}
+				return nil
+			},
+			Rollback: func(tx *gorm.DB) error {
+				return tx.Exec("ALTER TABLE `album_tags` DROP INDEX `album_tag_unique`").Error
+			},
+		},
 	})
 
 	if err := m.Migrate(); err != nil {
