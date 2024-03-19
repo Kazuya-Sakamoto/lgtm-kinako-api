@@ -8,24 +8,25 @@ import (
 )
 
 /*
-	repository
+repository
 */
 type MockUserRepository struct {
 	mock.Mock
 }
 
-func (m *MockUserRepository) CreateUser(user *domain.User) error {
+func (m *MockUserRepository) Create(user *domain.User) error {
 	args := m.Called(user)
 	return args.Error(0)
 }
 
-func (m *MockUserRepository) GetUserByEmail(user *domain.User, email string) error {
+func (m *MockUserRepository) FindByEmail(user *domain.User, email string) error {
 	args := m.Called(user, email)
 	if args.Get(0) != nil {
 		*user = args.Get(0).(domain.User)
 	}
 	return args.Error(1)
 }
+
 /*
 	handler
 */

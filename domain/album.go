@@ -23,9 +23,9 @@ type AlbumResponse struct {
 }
 
 type IAlbumRepository interface {
-	GetAllAlbums(albums *[]Album) error
-	GetRandomAlbums(albums *[]Album) error
-	GetAlbumsByTag(albums *[]Album, tagId uint) error
-	CreateAlbum(task *Album) error
-	DeleteAlbum(userId uint, albumId uint) error
+	FindAll(albums *[]Album) error
+	FindRandom(albums *[]Album) error
+	FindByTag(albums *[]Album, tagId uint) error
+	Create(album *Album) error
+	DeleteByAlbumID(userId uint, albumId uint) error
 }

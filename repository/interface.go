@@ -2,12 +2,6 @@ package repository
 
 import "lgtm-kinako-api/domain"
 
-type AllRepository interface {
-	IUserRepository
-	IAlbumRepository
-	ITagRepository
-}
-
 type IUserRepository interface {
 	domain.IUserRepository
 }
@@ -20,6 +14,6 @@ type ITagRepository interface {
 	domain.ITagRepository
 }
 
-type IAlbumtagRepository interface {
+type IAlbumTagRepository interface {
 	domain.IAlbumTagRepository
 }

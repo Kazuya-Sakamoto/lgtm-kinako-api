@@ -16,7 +16,7 @@ func NewAlbumRepository(db *gorm.DB) IAlbumRepository {
 	return &albumRepository{db}
 }
 
-func (ar *albumRepository) GetAllAlbums(albums *[]domain.Album) error {
+func (ar *albumRepository) FindAll(albums *[]domain.Album) error {
 	if err := ar.db.
 		Joins("INNER JOIN users AS u ON u.id = albums.user_id").
 		Order("albums.created_at").
@@ -27,7 +27,7 @@ func (ar *albumRepository) GetAllAlbums(albums *[]domain.Album) error {
 	return nil
 }
 
-func (ar *albumRepository) GetRandomAlbums(albums *[]domain.Album) error {
+func (ar *albumRepository) FindRandom(albums *[]domain.Album) error {
 	if err := ar.db.
 		Preload("Tags").
 		Order("RAND()").Limit(8).
@@ -37,7 +37,7 @@ func (ar *albumRepository) GetRandomAlbums(albums *[]domain.Album) error {
 	return nil
 }
 
-func (ar *albumRepository) GetAlbumsByTag(albums *[]domain.Album, tagId uint) error {
+func (ar *albumRepository) FindByTag(albums *[]domain.Album, tagId uint) error {
 	if err := ar.db.
 		Joins("JOIN album_tags ON album_tags.album_id = albums.id").
 		Where("album_tags.tag_id = ?", tagId).
@@ -50,14 +50,14 @@ func (ar *albumRepository) GetAlbumsByTag(albums *[]domain.Album, tagId uint) er
 	return nil
 }
 
-func (ar *albumRepository) CreateAlbum(album *domain.Album) error {
+func (ar *albumRepository) Create(album *domain.Album) error {
 	if err := ar.db.Create(album).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (tr *albumRepository) DeleteAlbum(userId uint, albumId uint) error {
+func (tr *albumRepository) DeleteByAlbumID(userId uint, albumId uint) error {
 	result := tr.db.Where("id=? AND user_id=?", albumId, userId).Delete(&domain.Album{})
 	if result.Error != nil {
 		return result.Error

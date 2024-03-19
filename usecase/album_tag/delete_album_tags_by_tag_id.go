@@ -4,16 +4,16 @@ import (
 	"lgtm-kinako-api/repository"
 )
 
-type DeleteAlbumTagsByTagIdUsecase struct {
-	atr repository.IAlbumtagRepository
+type DeleteAlbumTagsByTagIDUsecase struct {
+	atr repository.IAlbumTagRepository
 }
 
-func NewDeleteAlbumTagsByTagIdUsecase(atr repository.IAlbumtagRepository) *DeleteAlbumTagsByTagIdUsecase {
-	return &DeleteAlbumTagsByTagIdUsecase{atr}
+func NewDeleteAlbumTagsByTagIDUsecase(atr repository.IAlbumTagRepository) *DeleteAlbumTagsByTagIDUsecase {
+	return &DeleteAlbumTagsByTagIDUsecase{atr}
 }
 
-func (atu *DeleteAlbumTagsByTagIdUsecase) DeleteAlbumTagsByTagId(tagId uint) error {
-	if err := atu.atr.DeleteAlbumTagsByTagId(tagId); err != nil {
+func (atu *DeleteAlbumTagsByTagIDUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
+	if err := atu.atr.DeleteByTagID(tagId); err != nil {
 		return err
 	}
 	return nil

@@ -17,7 +17,7 @@ func NewGetAlbumsByTagUsecase(ar repository.IAlbumRepository, ah handler.IAlbumH
 
 func (au *GetAlbumsByTagUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumResponse, error) {
 	albums := []domain.Album{}
-	if err := au.ar.GetAlbumsByTag(&albums, tagId); err != nil {
+	if err := au.ar.FindByTag(&albums, tagId); err != nil {
 		return nil, err
 	}
 	res := []domain.AlbumResponse{}

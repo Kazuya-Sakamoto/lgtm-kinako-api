@@ -8,7 +8,7 @@ import (
 	"github.com/stretchr/testify/require"
 )
 
-func setupDeleteAlbumTagsByTagIdUsecase(t *testing.T) (*mock.MockAlbumTagRepository, *AlbumTagUsecase, func()) {
+func setupDeleteAlbumTagsByTagIDUsecase(t *testing.T) (*mock.MockAlbumTagRepository, *AlbumTagUsecase, func()) {
 	mr := new(mock.MockAlbumTagRepository)
 	usecase := NewAlbumTagUsecase(mr)
 
@@ -17,16 +17,16 @@ func setupDeleteAlbumTagsByTagIdUsecase(t *testing.T) (*mock.MockAlbumTagReposit
 	}
 }
 
-func Test_AlbumTagUsecase_DeleteAlbumTagsByTagId(t *testing.T) {
+func Test_AlbumTagUsecase_DeleteAlbumTagsByTagID(t *testing.T) {
 	t.Run("アルバムタグが正常に削除されること", func(t *testing.T) {
-		mr, usecase, cleanup := setupDeleteAlbumTagsByTagIdUsecase(t)
+		mr, usecase, cleanup := setupDeleteAlbumTagsByTagIDUsecase(t)
 		defer cleanup()
 
 		tagId := uint(1)
 
-		mr.On("DeleteAlbumTagsByTagId", tagId).Return(nil)
+		mr.On("DeleteByTagID", tagId).Return(nil)
 
-		err := usecase.DeleteAlbumTagsByTagId(tagId)
+		err := usecase.DeleteAlbumTagsByTagID(tagId)
 
 		require.NoError(t, err)
 	})

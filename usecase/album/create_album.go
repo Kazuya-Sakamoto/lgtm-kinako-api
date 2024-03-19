@@ -19,7 +19,7 @@ func (au *CreateAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumRespo
 	if err := au.ah.AlbumHandler(album); err != nil {
 		return domain.AlbumResponse{}, err
 	}
-	if err := au.ar.CreateAlbum(&album); err != nil {
+	if err := au.ar.Create(&album); err != nil {
 		return domain.AlbumResponse{}, err
 	}
 	res := domain.AlbumResponse{

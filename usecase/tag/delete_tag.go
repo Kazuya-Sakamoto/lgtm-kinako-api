@@ -15,7 +15,7 @@ func NewDeleteTagUsecase(tr repository.ITagRepository, th handler.ITagHandler) *
 }
 
 func (tu *DeleteTagUsecase) DeleteTag(tagId uint) error {
-	if err := tu.tr.DeleteTag(tagId); err != nil {
+	if err := tu.tr.DeleteByTagID(tagId); err != nil {
 		return err
 	}
 	return nil

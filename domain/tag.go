@@ -11,7 +11,7 @@ type TagResponse struct {
 }
 
 type ITagRepository interface {
-	GetTags(tags *[]Tag) error
-	CreateTag(tag *Tag) error
-	DeleteTag(tagId uint) error
+	FindAll(tags *[]Tag) error
+	Create(tag *Tag) error
+	DeleteByTagID(tagId uint) error
 }

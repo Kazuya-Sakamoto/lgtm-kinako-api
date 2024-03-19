@@ -26,7 +26,7 @@ func (lu *LoginUsecase) Login(user domain.User) (string, error) {
 		return "", err
 	}
 	storedUser := domain.User{}
-	if err := lu.ur.GetUserByEmail(&storedUser, user.Email); err != nil {
+	if err := lu.ur.FindByEmail(&storedUser, user.Email); err != nil {
 		return "", err
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(user.Password))

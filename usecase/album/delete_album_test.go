@@ -24,7 +24,7 @@ func Test_AlbumUsecase_DeleteAlbum(t *testing.T) {
 
 		userId, albumId := uint(1), uint(1)
 
-		mr.On("DeleteAlbum", albumId).Return(nil)
+		mr.On("DeleteByAlbumID", albumId).Return(nil)
 
 		err := usecase.DeleteAlbum(userId, albumId)
 

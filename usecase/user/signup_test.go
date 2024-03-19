@@ -33,7 +33,7 @@ func Test_UserUsecase_SignUp(t *testing.T) {
 		}
 
 		mh.On("UserHandler", input).Return(nil)
-		mr.On("CreateUser", testifyMock.AnythingOfType("*domain.User")).Run(func(args testifyMock.Arguments) {
+		mr.On("Create", testifyMock.AnythingOfType("*domain.User")).Run(func(args testifyMock.Arguments) {
 			arg := args.Get(0).(*domain.User)
 			arg.ID = 1
 		}).Return(nil)
@@ -59,7 +59,7 @@ func Test_UserUsecase_SignUp(t *testing.T) {
 		require.Error(t, err)
 	})
 
-	t.Run("CreateUserがエラーを返した場合にSignupが失敗すること", func(t *testing.T) {
+	t.Run("Createがエラーを返した場合にSignupが失敗すること", func(t *testing.T) {
 		mr, mh, usecase, cleanup := setupSignupUsecase(t)
 		defer cleanup()
 
@@ -69,7 +69,7 @@ func Test_UserUsecase_SignUp(t *testing.T) {
 		}
 
 		mh.On("UserHandler", input).Return(nil)
-		mr.On("CreateUser", testifyMock.AnythingOfType("*domain.User")).Return(assert.AnError)
+		mr.On("Create", testifyMock.AnythingOfType("*domain.User")).Return(assert.AnError)
 		_, err := usecase.SignUp(input)
 
 		require.Error(t, err)

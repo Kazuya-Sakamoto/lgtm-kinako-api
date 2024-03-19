@@ -54,7 +54,7 @@ func (tc *tagController) DeleteTag(c echo.Context) error {
 		return c.JSON(http.StatusBadRequest, "tagIdが存在しません")
 	}
 
-	err = tc.atu.DeleteAlbumTagsByTagId(uint(tagId))
+	err = tc.atu.DeleteAlbumTagsByTagID(uint(tagId))
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, err.Error())
 	}

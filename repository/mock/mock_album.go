@@ -13,7 +13,7 @@ type MockAlbumRepository struct {
 	mock.Mock
 }
 
-func (m *MockAlbumRepository) GetAllAlbums(albums *[]domain.Album) error {
+func (m *MockAlbumRepository) FindAll(albums *[]domain.Album) error {
 	args := m.Called(albums)
 	if args.Get(0) != nil {
 		*albums = args.Get(0).([]domain.Album)
@@ -21,7 +21,7 @@ func (m *MockAlbumRepository) GetAllAlbums(albums *[]domain.Album) error {
 	return args.Error(0)
 }
 
-func (m *MockAlbumRepository) GetRandomAlbums(albums *[]domain.Album) error {
+func (m *MockAlbumRepository) FindRandom(albums *[]domain.Album) error {
 	args := m.Called(albums)
 	if args.Get(0) != nil {
 		*albums = args.Get(0).([]domain.Album)
@@ -29,7 +29,7 @@ func (m *MockAlbumRepository) GetRandomAlbums(albums *[]domain.Album) error {
 	return args.Error(0)
 }
 
-func (m *MockAlbumRepository) GetAlbumsByTag(albums *[]domain.Album, tagId uint) error {
+func (m *MockAlbumRepository) FindByTag(albums *[]domain.Album, tagId uint) error {
 	args := m.Called(albums)
 	if args.Get(0) != nil {
 		*albums = args.Get(0).([]domain.Album)
@@ -37,12 +37,12 @@ func (m *MockAlbumRepository) GetAlbumsByTag(albums *[]domain.Album, tagId uint)
 	return args.Error(0)
 }
 
-func (m *MockAlbumRepository) CreateAlbum(album *domain.Album) error {
+func (m *MockAlbumRepository) Create(album *domain.Album) error {
 	args := m.Called(album)
 	return args.Error(0)
 }
 
-func (m *MockAlbumRepository) DeleteAlbum(userId, albumId uint) error {
+func (m *MockAlbumRepository) DeleteByAlbumID(userId, albumId uint) error {
 	args := m.Called(albumId)
 	return args.Error(0)
 }

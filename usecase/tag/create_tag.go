@@ -19,7 +19,7 @@ func (tu *CreateTagUsecase) CreateTag(tag domain.Tag) (domain.TagResponse, error
 	if err := tu.th.TagHandler(tag); err != nil {
 		return domain.TagResponse{}, err
 	}
-	if err := tu.tr.CreateTag(&tag); err != nil {
+	if err := tu.tr.Create(&tag); err != nil {
 		return domain.TagResponse{}, err
 	}
 	res := domain.TagResponse(tag)

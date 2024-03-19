@@ -26,7 +26,7 @@ func (su *SignupUsecase) SignUp(user domain.User) (domain.UserResponse, error) {
 		return domain.UserResponse{}, err
 	}
 	newUser := domain.User{Email: user.Email, Password: string(hash)}
-	if err := su.ur.CreateUser(&newUser); err != nil {
+	if err := su.ur.Create(&newUser); err != nil {
 		return domain.UserResponse{}, err
 	}
 
