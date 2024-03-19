@@ -11,7 +11,7 @@ func NewDeleteAlbumUsecase(ar repository.IAlbumRepository) *DeleteAlbumUsecase {
 }
 
 func (au *DeleteAlbumUsecase) DeleteAlbum(userId, albumId uint) error {
-	if err := au.ar.DeleteAlbum(userId, albumId); err != nil {
+	if err := au.ar.DeleteByAlbumID(userId, albumId); err != nil {
 		return err
 	}
 	return nil

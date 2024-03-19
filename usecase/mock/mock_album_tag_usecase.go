@@ -8,7 +8,7 @@ type MockAlbumTagUsecase struct {
 	mock.Mock
 }
 
-func (mu *MockAlbumTagUsecase) DeleteAlbumTagsByTagId(tagId uint) error {
+func (mu *MockAlbumTagUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
 	args := mu.Called(tagId)
 	return args.Error(0)
 }

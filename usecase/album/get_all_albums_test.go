@@ -54,7 +54,7 @@ func Test_AlbumUsecase_GetAllAlbums(t *testing.T) {
 			},
 		}
 
-		mr.On("GetAllAlbums", testify_mock.AnythingOfType("*[]domain.Album")).Run(func(args testify_mock.Arguments) {
+		mr.On("FindAll", testify_mock.AnythingOfType("*[]domain.Album")).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Album)
 			*arg = ea
 		}).Return(nil)

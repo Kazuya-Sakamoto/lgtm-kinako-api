@@ -11,7 +11,7 @@ type MockAlbumTagRepository struct {
 	mock.Mock
 }
 
-func (m *MockAlbumTagRepository) DeleteAlbumTagsByTagId(tagId uint) error {
+func (m *MockAlbumTagRepository) DeleteByTagID(tagId uint) error {
 	args := m.Called(tagId)
 	return args.Error(0)
 }

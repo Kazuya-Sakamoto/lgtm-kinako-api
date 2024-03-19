@@ -7,33 +7,32 @@ import (
 )
 
 /*
-	repository
+repository
 */
 type MockTagRepository struct {
 	mock.Mock
 }
 
-func (m *MockTagRepository) GetTags(tags *[]domain.Tag) error {
-    args := m.Called(tags)
-    if args.Get(0) != nil {
-        *tags = args.Get(0).([]domain.Tag)
-    }
-    return args.Error(0)
+func (m *MockTagRepository) FindAll(tags *[]domain.Tag) error {
+	args := m.Called(tags)
+	if args.Get(0) != nil {
+		*tags = args.Get(0).([]domain.Tag)
+	}
+	return args.Error(0)
 }
 
-func (m *MockTagRepository) CreateTag(tag *domain.Tag) error {
+func (m *MockTagRepository) Create(tag *domain.Tag) error {
 	args := m.Called(tag)
 	return args.Error(0)
 }
 
-func (m *MockTagRepository) DeleteTag(tagId uint) error {
+func (m *MockTagRepository) DeleteByTagID(tagId uint) error {
 	args := m.Called(tagId)
 	return args.Error(0)
 }
 
-
 /*
-	handler
+handler
 */
 type MockTagHandler struct {
 	mock.Mock

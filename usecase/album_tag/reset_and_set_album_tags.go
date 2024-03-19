@@ -5,10 +5,10 @@ import (
 )
 
 type ResetAndSetAlbumTagsUsecase struct {
-	atr repository.IAlbumtagRepository
+	atr repository.IAlbumTagRepository
 }
 
-func NewResetAndSetAlbumTagsUsecase(atr repository.IAlbumtagRepository) *ResetAndSetAlbumTagsUsecase {
+func NewResetAndSetAlbumTagsUsecase(atr repository.IAlbumTagRepository) *ResetAndSetAlbumTagsUsecase {
 	return &ResetAndSetAlbumTagsUsecase{atr}
 }
 

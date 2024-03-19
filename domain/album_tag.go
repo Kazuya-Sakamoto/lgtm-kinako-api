@@ -13,7 +13,7 @@ type AlbumTagResponse struct {
 }
 
 type IAlbumTagRepository interface {
-	DeleteAlbumTagsByTagId(tagId uint) error
+	DeleteByTagID(tagId uint) error
 	DeleteByAlbumID(albumId uint) error
 	Create(albumId uint, tagIds []uint) error
 	ResetAndSet(albumId uint, tagIds []uint) error

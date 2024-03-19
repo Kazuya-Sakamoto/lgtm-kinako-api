@@ -35,7 +35,7 @@ func Test_AlbumUsecase_CreateAlbum(t *testing.T) {
 		}
 
 		mh.On("AlbumHandler", album).Return(nil)
-		mr.On("CreateAlbum", &album).Return(nil)
+		mr.On("Create", &album).Return(nil)
 
 		res, err := usecase.CreateAlbum(album)
 

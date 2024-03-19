@@ -1,6 +1,6 @@
 package album_tag
 
 type IAlbumTagUsecase interface {
-	DeleteAlbumTagsByTagId(tagId uint) error
+	DeleteAlbumTagsByTagID(tagId uint) error
 	ResetAndSetAlbumTags(albumId uint, tagIds []uint) error
 }

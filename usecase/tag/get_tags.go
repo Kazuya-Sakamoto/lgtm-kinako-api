@@ -17,7 +17,7 @@ func NewGetTagsUsecase(tr repository.ITagRepository, th handler.ITagHandler) *Ge
 
 func (tu *GetTagsUsecase) GetTags() ([]domain.TagResponse, error) {
 	tags := []domain.Tag{}
-	if err := tu.tr.GetTags(&tags); err != nil {
+	if err := tu.tr.FindAll(&tags); err != nil {
 		return nil, err
 	}
 	res := []domain.TagResponse{}

@@ -17,7 +17,7 @@ func NewGetRandomAlbumsUsecase(ar repository.IAlbumRepository, ah handler.IAlbum
 
 func (au *GetRandomAlbumsUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
 	albums := []domain.Album{}
-	if err := au.ar.GetRandomAlbums(&albums); err != nil {
+	if err := au.ar.FindRandom(&albums); err != nil {
 		return nil, err
 	}
 	res := []domain.AlbumResponse{}

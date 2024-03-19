@@ -16,6 +16,6 @@ type UserResponse struct {
 }
 
 type IUserRepository interface {
-	GetUserByEmail(user *User, email string) error
-	CreateUser(user *User) error
+	FindByEmail(user *User, email string) error
+	Create(user *User) error
 }

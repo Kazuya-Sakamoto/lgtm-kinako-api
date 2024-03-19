@@ -47,7 +47,7 @@ func Test_UserUsecase_Login(t *testing.T) {
 			モックの期待値の設定
 		*/
 		mh.On("UserHandler", input).Return(nil)
-		mr.On("GetUserByEmail", &domain.User{}, input.Email).Return(user, nil)
+		mr.On("FindByEmail", &domain.User{}, input.Email).Return(user, nil)
 		/*
 			ログインの実行
 		*/
@@ -90,7 +90,7 @@ func Test_UserUsecase_Login(t *testing.T) {
 			ユーザーが見つからない場合のモックの設定
 		*/
 		mh.On("UserHandler", input).Return(nil)
-		mr.On("GetUserByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
+		mr.On("FindByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
 		/*
 			ログインの実行
 		*/

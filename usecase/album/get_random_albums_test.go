@@ -46,7 +46,7 @@ func Test_AlbumUsecase_GetRandomAlbums(t *testing.T) {
 			},
 		}
 
-		mr.On("GetRandomAlbums", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
+		mr.On("FindRandom", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Album)
 			*arg = ea
 		})

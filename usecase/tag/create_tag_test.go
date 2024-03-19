@@ -31,7 +31,7 @@ func Test_TagUsecase_CreateTag(t *testing.T) {
 		}
 
 		th.On("TagHandler", tag).Return(nil)
-		tr.On("CreateTag", &tag).Return(nil)
+		tr.On("Create", &tag).Return(nil)
 
 		res, err := usecase.CreateTag(tag)
 

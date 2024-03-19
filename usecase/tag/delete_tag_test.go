@@ -26,7 +26,7 @@ func Test_TagUsecase_DeleteTag(t *testing.T) {
 
 		tagId := uint(1)
 
-		tr.On("DeleteTag", tagId).Return(nil)
+		tr.On("DeleteByTagID", tagId).Return(nil)
 
 		err := usecase.DeleteTag(tagId)
 
