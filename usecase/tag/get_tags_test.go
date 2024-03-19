@@ -37,7 +37,7 @@ func Test_TagUsecase_GetTags(t *testing.T) {
 			},
 		}
 
-		mr.On("GetTags", testify_mock.AnythingOfType("*[]domain.Tag")).Return(nil).Run(func(args testify_mock.Arguments) {
+		mr.On("FindAll", testify_mock.AnythingOfType("*[]domain.Tag")).Return(nil).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Tag)
 			*arg = ea
 		})
