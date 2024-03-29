@@ -5,14 +5,14 @@ import (
 )
 
 type AlbumTagUsecase struct {
-	DeleteAlbumTagsByTagIDUsecase *DeleteAlbumTagsByTagIDUsecase
-	ResetAndSetAlbumTagsUsecase   *ResetAndSetAlbumTagsUsecase
+	DeleteAlbumTagsByTagIDUsecase   *DeleteAlbumTagsByTagIDUsecase
+	DeleteAndInsertAlbumTagsUsecase *DeleteAndInsertAlbumTagsUsecase
 }
 
 func NewAlbumTagUsecase(atr repository.IAlbumTagRepository) *AlbumTagUsecase {
 	return &AlbumTagUsecase{
-		DeleteAlbumTagsByTagIDUsecase: NewDeleteAlbumTagsByTagIDUsecase(atr),
-		ResetAndSetAlbumTagsUsecase:   NewResetAndSetAlbumTagsUsecase(atr),
+		DeleteAlbumTagsByTagIDUsecase:   NewDeleteAlbumTagsByTagIDUsecase(atr),
+		DeleteAndInsertAlbumTagsUsecase: NewDeleteAndInsertAlbumTagsUsecase(atr),
 	}
 }
 
@@ -20,6 +20,6 @@ func (atu *AlbumTagUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
 	return atu.DeleteAlbumTagsByTagIDUsecase.DeleteAlbumTagsByTagID(tagId)
 }
 
-func (atu *AlbumTagUsecase) ResetAndSetAlbumTags(albumId uint, tagIds []uint) error {
-	return atu.ResetAndSetAlbumTagsUsecase.ResetAndSetAlbumTags(albumId, tagIds)
+func (atu *AlbumTagUsecase) DeleteAndInsertAlbumTags(albumId uint, tagIds []uint) error {
+	return atu.DeleteAndInsertAlbumTagsUsecase.DeleteAndInsertAlbumTags(albumId, tagIds)
 }

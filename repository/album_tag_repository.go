@@ -36,7 +36,7 @@ func (atr *albumTagRepository) Create(albumId uint, tagIds []uint) error {
 	return nil
 }
 
-func (atr *albumTagRepository) ResetAndSet(albumId uint, tagIds []uint) error {
+func (atr *albumTagRepository) DeleteAndInsert(albumId uint, tagIds []uint) error {
 	return atr.db.Transaction(func(tx *gorm.DB) error {
 		if err := atr.DeleteByAlbumID(albumId); err != nil {
 			return err

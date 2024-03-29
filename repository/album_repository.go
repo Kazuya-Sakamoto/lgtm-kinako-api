@@ -30,7 +30,7 @@ func (ar *albumRepository) FindAll(albums *[]domain.Album) error {
 func (ar *albumRepository) FindRandom(albums *[]domain.Album) error {
 	if err := ar.db.
 		Preload("Tags").
-		Order("RAND()").Limit(8).
+		Order("RAND()").Limit(10).
 		Find(albums).Error; err != nil {
 		return err
 	}

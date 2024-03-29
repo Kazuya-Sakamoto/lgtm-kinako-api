@@ -13,7 +13,7 @@ func (mu *MockAlbumTagUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
 	return args.Error(0)
 }
 
-func (mu *MockAlbumTagUsecase) ResetAndSetAlbumTags(albumId uint, tagIds []uint) error {
+func (mu *MockAlbumTagUsecase) DeleteAndInsertAlbumTags(albumId uint, tagIds []uint) error {
 	args := mu.Called(albumId, tagIds)
 	return args.Error(0)
 }

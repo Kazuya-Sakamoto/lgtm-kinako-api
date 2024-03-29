@@ -73,7 +73,7 @@ func NewRouter(
 	albums.DELETE("/:albumId", ac.DeleteAlbum)
 
 	// * AlbumTag Routes
-	albums.POST("/tags/upsert", atu.ResetAndSetAlbumTags)
+	albums.POST("/tags/update", atu.DeleteAndInsertAlbumTags)
 
 	// * Tag Routes
 	tags := v1.Group("/tags")

@@ -26,7 +26,7 @@ func (m *MockAlbumTagRepository) Create(albumId uint, tagIds []uint) error {
 	return args.Error(0)
 }
 
-func (m *MockAlbumTagRepository) ResetAndSet(albumId uint, tagIds []uint) error {
+func (m *MockAlbumTagRepository) DeleteAndInsert(albumId uint, tagIds []uint) error {
 	args := m.Called(albumId, tagIds)
 	return args.Error(0)
 }

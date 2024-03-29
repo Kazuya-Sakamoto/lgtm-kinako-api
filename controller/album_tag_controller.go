@@ -10,7 +10,7 @@ import (
 )
 
 type IAlbumTagController interface {
-	ResetAndSetAlbumTags(c echo.Context) error
+	DeleteAndInsertAlbumTags(c echo.Context) error
 }
 
 type albumtagController struct {
@@ -26,13 +26,13 @@ func NewAlbumTagController(atu album_tag.IAlbumTagUsecase) IAlbumTagController {
 	return &albumtagController{atu}
 }
 
-func (ac *albumtagController) ResetAndSetAlbumTags(c echo.Context) error {
+func (ac *albumtagController) DeleteAndInsertAlbumTags(c echo.Context) error {
 	req := new(albumTagRequest)
 	if err := c.Bind(req); err != nil {
 		return c.JSON(http.StatusBadRequest, fmt.Sprintf("Error binding request: %s", err.Error()))
 	}
 
-	err := ac.atu.ResetAndSetAlbumTags(req.AlbumId, req.TagIds)
+	err := ac.atu.DeleteAndInsertAlbumTags(req.AlbumId, req.TagIds)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Error upserting album tags: %s", err.Error()))
 	}
