@@ -60,30 +60,29 @@ func NewRouter(
 	v1.POST("/login", uc.LogIn)
 	v1.GET("/csrf", uc.CsrfToken)
 
-	// * Album Routes
+	// * Albums Routes
 	albums := v1.Group("/albums")
 	albums.GET("", ac.GetAlbums)
 	albums.GET("/random", ac.GetRandomAlbums)
-	albums.Use(echojwt.WithConfig(echojwt.Config{
+	albums.GET("/tags/count", atu.GetAlbumCountsByTag)
+	albumsSecured := albums.Group("", echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
-	albums.GET("/all", ac.GetAllAlbums)
-	albums.POST("", ac.CreateAlbum)
-	albums.DELETE("/:albumId", ac.DeleteAlbum)
-
-	// * AlbumTag Routes
-	albums.POST("/tags/update", atu.DeleteAndInsertAlbumTags)
+	albumsSecured.GET("/all", ac.GetAllAlbums)
+	albumsSecured.POST("", ac.CreateAlbum)
+	albumsSecured.DELETE("/:albumId", ac.DeleteAlbum)
+	albumsSecured.POST("/tags/update", atu.DeleteAndInsertAlbumTags)
 
 	// * Tag Routes
 	tags := v1.Group("/tags")
 	tags.GET("", tc.GetTags)
-	tags.Use(echojwt.WithConfig(echojwt.Config{
+	tagsSecured := tags.Group("", echojwt.WithConfig(echojwt.Config{
 		SigningKey:  []byte(os.Getenv("SECRET")),
 		TokenLookup: "cookie:token",
 	}))
-	tags.POST("", tc.CreateTag)
-	tags.DELETE("/:tagId", tc.DeleteTag)
+	tagsSecured.POST("", tc.CreateTag)
+	tagsSecured.DELETE("/:tagId", tc.DeleteTag)
 
 	return e
 }

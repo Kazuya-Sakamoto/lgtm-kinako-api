@@ -48,3 +48,15 @@ func (atr *albumTagRepository) DeleteAndInsert(albumId uint, tagIds []uint) erro
 		return nil
 	})
 }
+
+func (atr *albumTagRepository) FindCountsByTag() ([]domain.TagCount, error) {
+	var counts []domain.TagCount
+	if err := atr.db.
+		Table("album_tags").
+		Select("tag_id, COUNT(album_id) AS count").
+		Group("tag_id").
+		Scan(&counts).Error; err != nil {
+		return nil, err
+	}
+	return counts, nil
+}

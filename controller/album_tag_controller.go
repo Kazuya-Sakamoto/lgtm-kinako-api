@@ -11,6 +11,7 @@ import (
 
 type IAlbumTagController interface {
 	DeleteAndInsertAlbumTags(c echo.Context) error
+	GetAlbumCountsByTag(c echo.Context) error
 }
 
 type albumtagController struct {
@@ -38,4 +39,13 @@ func (ac *albumtagController) DeleteAndInsertAlbumTags(c echo.Context) error {
 	}
 
 	return c.NoContent(http.StatusOK)
+}
+
+func (ac *albumtagController) GetAlbumCountsByTag(c echo.Context) error {
+	counts, err := ac.atu.GetAlbumCountsByTag()
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Error retrieving album counts by tag: %s", err.Error()))
+	}
+
+	return c.JSON(http.StatusOK, counts)
 }
