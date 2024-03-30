@@ -43,7 +43,6 @@ func (ar *albumRepository) FindByTag(albums *[]domain.Album, tagId uint) error {
 		Where("album_tags.tag_id = ?", tagId).
 		Preload("Tags").
 		Order("RAND()").
-		Limit(8).
 		Find(albums).Error; err != nil {
 		return err
 	}
