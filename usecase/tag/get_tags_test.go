@@ -12,18 +12,17 @@ import (
 )
 
 func setupGetTagsUsecase(t *testing.T) (*mock.MockTagRepository, *GetTagsUsecase, func()) {
-	tr := new(mock.MockTagRepository)
-	th := new(mock.MockTagHandler)
-	usecase := NewGetTagsUsecase(tr, th)
+	re := new(mock.MockTagRepository)
+	usecase := NewGetTagsUsecase(re)
 
-	return tr, usecase, func() {
-		tr.AssertExpectations(t)
+	return re, usecase, func() {
+		re.AssertExpectations(t)
 	}
 }
 
 func Test_TagUsecase_GetTags(t *testing.T) {
 	t.Run("正常にタグが取得できること", func(t *testing.T) {
-		mr, usecase, cleanup := setupGetTagsUsecase(t)
+		re, usecase, cleanup := setupGetTagsUsecase(t)
 		defer cleanup()
 
 		ea := []domain.Tag{
@@ -37,7 +36,7 @@ func Test_TagUsecase_GetTags(t *testing.T) {
 			},
 		}
 
-		mr.On("FindAll", testify_mock.AnythingOfType("*[]domain.Tag")).Return(nil).Run(func(args testify_mock.Arguments) {
+		re.On("FindAll", testify_mock.AnythingOfType("*[]domain.Tag")).Return(nil).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Tag)
 			*arg = ea
 		})

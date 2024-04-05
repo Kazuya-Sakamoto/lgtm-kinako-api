@@ -5,15 +5,15 @@ import (
 )
 
 type DeleteAlbumTagsByTagIDUsecase struct {
-	atr repository.IAlbumTagRepository
+	re repository.IAlbumTagRepository
 }
 
-func NewDeleteAlbumTagsByTagIDUsecase(atr repository.IAlbumTagRepository) *DeleteAlbumTagsByTagIDUsecase {
-	return &DeleteAlbumTagsByTagIDUsecase{atr}
+func NewDeleteAlbumTagsByTagIDUsecase(re repository.IAlbumTagRepository) *DeleteAlbumTagsByTagIDUsecase {
+	return &DeleteAlbumTagsByTagIDUsecase{re}
 }
 
-func (atu *DeleteAlbumTagsByTagIDUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
-	if err := atu.atr.DeleteByTagID(tagId); err != nil {
+func (u *DeleteAlbumTagsByTagIDUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
+	if err := u.re.DeleteByTagID(tagId); err != nil {
 		return err
 	}
 	return nil

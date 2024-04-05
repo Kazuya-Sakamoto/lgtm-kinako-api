@@ -21,15 +21,15 @@ func setupUserControllerTest(mockUsecase *mock.MockUserUsecase, method, url stri
 	req := httptest.NewRequest(method, url, bytes.NewBuffer(body))
 	req.Header.Set(echo.HeaderContentType, echo.MIMEApplicationJSON)
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	return e, rec, c, controller
+	ctx := e.NewContext(req, rec)
+	return e, rec, ctx, controller
 }
 
 func Test_UserController_CsrfToken(t *testing.T) {
-	mu := new(mock.MockUserUsecase)
+	usecase := new(mock.MockUserUsecase)
 	csrf_token := "expect_csrf_token"
 
-	_, res, c, controller := setupUserControllerTest(mu, http.MethodGet, "/csrf", nil)
+	_, res, c, controller := setupUserControllerTest(usecase, http.MethodGet, "/csrf", nil)
 	c.Set("csrf", csrf_token)
 
 	if assert.NoError(t, controller.CsrfToken(c)) {
@@ -42,13 +42,13 @@ func Test_UserController_CsrfToken(t *testing.T) {
 }
 
 func Test_UserController_LogIn(t *testing.T) {
-	mu := new(mock.MockUserUsecase)
+	usecase := new(mock.MockUserUsecase)
 	token := "expected_token"
 	user := domain.User{Email: "test@test.com", Password: "password"}
-	mu.On("Login", user).Return(token, nil)
+	usecase.On("Login", user).Return(token, nil)
 
 	userJSON, _ := json.Marshal(user)
-	_, res, c, controller := setupUserControllerTest(mu, http.MethodPost, "/login", userJSON)
+	_, res, c, controller := setupUserControllerTest(usecase, http.MethodPost, "/login", userJSON)
 
 	if assert.NoError(t, controller.LogIn(c)) {
 		assert.Equal(t, http.StatusOK, res.Code)

@@ -9,25 +9,25 @@ import (
 )
 
 func setupDeleteAndInsertAlbumTagsUsecase(t *testing.T) (*mock.MockAlbumTagRepository, *DeleteAndInsertAlbumTagsUsecase, func()) {
-	mr := new(mock.MockAlbumTagRepository)
-	usecase := NewDeleteAndInsertAlbumTagsUsecase(mr)
+	re := new(mock.MockAlbumTagRepository)
+	usecase := NewDeleteAndInsertAlbumTagsUsecase(re)
 
-	return mr, usecase, func() {
-		mr.AssertExpectations(t)
+	return re, usecase, func() {
+		re.AssertExpectations(t)
 	}
 }
 
 func Test_AlbumTagUsecase_DeleteAndInsertAlbumTags(t *testing.T) {
-	mr, usecase, cleanup := setupDeleteAndInsertAlbumTagsUsecase(t)
+	re, usecase, cleanup := setupDeleteAndInsertAlbumTagsUsecase(t)
 	defer cleanup()
 
 	albumId := uint(1)
 	tagIds := []uint{2, 3, 4}
 
-	mr.On("DeleteAndInsert", albumId, tagIds).Return(nil).Once()
+	re.On("DeleteAndInsert", albumId, tagIds).Return(nil).Once()
 
 	err := usecase.DeleteAndInsertAlbumTags(albumId, tagIds)
 
 	assert.NoError(t, err)
-	mr.AssertCalled(t, "DeleteAndInsert", albumId, tagIds)
+	re.AssertCalled(t, "DeleteAndInsert", albumId, tagIds)
 }

@@ -10,13 +10,13 @@ type MockAlbumTagUsecase struct {
 	mock.Mock
 }
 
-func (mu *MockAlbumTagUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
-	args := mu.Called(tagId)
+func (m *MockAlbumTagUsecase) DeleteAlbumTagsByTagID(tagId uint) error {
+	args := m.Called(tagId)
 	return args.Error(0)
 }
 
-func (mu *MockAlbumTagUsecase) DeleteAndInsertAlbumTags(albumId uint, tagIds []uint) error {
-	args := mu.Called(albumId, tagIds)
+func (m *MockAlbumTagUsecase) DeleteAndInsertAlbumTags(albumId uint, tagIds []uint) error {
+	args := m.Called(albumId, tagIds)
 	return args.Error(0)
 }
 

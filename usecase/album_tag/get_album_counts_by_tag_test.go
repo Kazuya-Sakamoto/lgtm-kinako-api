@@ -11,16 +11,16 @@ import (
 )
 
 func setupGetAlbumCountsByTagUsecase(t *testing.T) (*mock.MockAlbumTagRepository, *GetAlbumCountsByTagUsecase, func()) {
-	mr := new(mock.MockAlbumTagRepository)
-	usecase := NewGetAlbumCountsByTagUsecase(mr)
+	re := new(mock.MockAlbumTagRepository)
+	usecase := NewGetAlbumCountsByTagUsecase(re)
 
-	return mr, usecase, func() {
-		mr.AssertExpectations(t)
+	return re, usecase, func() {
+		re.AssertExpectations(t)
 	}
 }
 
 func Test_GetAlbumCountsByTagUsecase_GetAlbumCountsByTag(t *testing.T) {
-	mr, usecase, cleanup := setupGetAlbumCountsByTagUsecase(t)
+	re, usecase, cleanup := setupGetAlbumCountsByTagUsecase(t)
 	defer cleanup()
 
 	expectedCounts := []domain.TagCount{
@@ -30,11 +30,11 @@ func Test_GetAlbumCountsByTagUsecase_GetAlbumCountsByTag(t *testing.T) {
 		{TagID: 4, Count: 0},
 	}
 
-	mr.On("FindAlbumCountsByTag").Return(expectedCounts, nil).Once()
+	re.On("FindCountsByTag").Return(expectedCounts, nil).Once()
 
 	counts, err := usecase.GetAlbumCountsByTag()
 
 	require.NoError(t, err)
 	assert.Equal(t, expectedCounts, counts)
-	mr.AssertCalled(t, "FindAlbumCountsByTag")
+	re.AssertCalled(t, "FindCountsByTag")
 }

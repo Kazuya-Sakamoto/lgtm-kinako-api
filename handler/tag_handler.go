@@ -16,7 +16,7 @@ func NewTagHandler() ITagHandler {
 	return &tagHandler{}
 }
 
-func (th *tagHandler) TagHandler(tag domain.Tag) error {
+func (ha *tagHandler) TagHandler(tag domain.Tag) error {
 	return handler.ValidateStruct(&tag,
 		handler.Field(
 			&tag.Name,

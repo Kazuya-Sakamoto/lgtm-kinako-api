@@ -12,57 +12,57 @@ import (
 )
 
 type ITagController interface {
-	GetTags(c echo.Context) error
-	CreateTag(c echo.Context) error
-	DeleteTag(c echo.Context) error
+	GetTags(ctx echo.Context) error
+	CreateTag(ctx echo.Context) error
+	DeleteTag(ctx echo.Context) error
 }
 
 type tagController struct {
-	tu  tag.ITagUsecase
-	atu album_tag.IAlbumTagUsecase
+	uc   tag.ITagUsecase
+	atuc album_tag.IAlbumTagUsecase
 }
 
-func NewTagController(tu tag.ITagUsecase, atu album_tag.IAlbumTagUsecase) ITagController {
-	return &tagController{tu, atu}
+func NewTagController(uc tag.ITagUsecase, atuc album_tag.IAlbumTagUsecase) ITagController {
+	return &tagController{uc, atuc}
 }
 
-func (tc *tagController) GetTags(c echo.Context) error {
-	res, err := tc.tu.GetTags()
+func (c *tagController) GetTags(ctx echo.Context) error {
+	res, err := c.uc.GetTags()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusOK, res)
+	return ctx.JSON(http.StatusOK, res)
 }
 
-func (tc *tagController) CreateTag(c echo.Context) error {
+func (c *tagController) CreateTag(ctx echo.Context) error {
 	tag := domain.Tag{}
-	if err := c.Bind(&tag); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+	if err := ctx.Bind(&tag); err != nil {
+		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	res, err := tc.tu.CreateTag(tag)
+	res, err := c.uc.CreateTag(tag)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, res)
+	return ctx.JSON(http.StatusCreated, res)
 }
 
-func (tc *tagController) DeleteTag(c echo.Context) error {
-	id := c.Param("tagId")
+func (c *tagController) DeleteTag(ctx echo.Context) error {
+	id := ctx.Param("tagId")
 	tagId, err := strconv.Atoi(id)
 	if err != nil {
-		return c.JSON(http.StatusBadRequest, "tagIdが存在しません")
+		return ctx.JSON(http.StatusBadRequest, "tagIdが存在しません")
 	}
 
-	err = tc.atu.DeleteAlbumTagsByTagID(uint(tagId))
+	err = c.atuc.DeleteAlbumTagsByTagID(uint(tagId))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	err = tc.tu.DeleteTag(uint(tagId))
+	err = c.uc.DeleteTag(uint(tagId))
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
 
-	return c.NoContent(http.StatusNoContent)
+	return ctx.NoContent(http.StatusNoContent)
 }

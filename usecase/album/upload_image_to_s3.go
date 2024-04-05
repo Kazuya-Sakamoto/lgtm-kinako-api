@@ -6,24 +6,18 @@ import (
 	"os"
 	"time"
 
-	"lgtm-kinako-api/handler"
-	"lgtm-kinako-api/repository"
-
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
 
-type UploadImageToS3Usecase struct {
-	ar repository.IAlbumRepository
-	ah handler.IAlbumHandler
+type UploadImageToS3Usecase struct{}
+
+func NewUploadImageToS3Usecase() *UploadImageToS3Usecase {
+	return &UploadImageToS3Usecase{}
 }
 
-func NewUploadImageToS3Usecase(ar repository.IAlbumRepository, ah handler.IAlbumHandler) *UploadImageToS3Usecase {
-	return &UploadImageToS3Usecase{ar, ah}
-}
-
-func (au *UploadImageToS3Usecase) UploadImageToS3(encodedImage []byte) (string, error) {
+func (u *UploadImageToS3Usecase) UploadImageToS3(encodedImage []byte) (string, error) {
 	// const s3BaseURL = "https://lgtm-kinako.s3.ap-northeast-1.amazonaws.com/"
 	const cloudFrontURL = "https://d18g0hf2wnz3gs.cloudfront.net/"
 	awsBucket := os.Getenv("AWS_BUCKET")

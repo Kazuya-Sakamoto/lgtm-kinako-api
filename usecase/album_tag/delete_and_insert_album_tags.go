@@ -5,15 +5,15 @@ import (
 )
 
 type DeleteAndInsertAlbumTagsUsecase struct {
-	atr repository.IAlbumTagRepository
+	re repository.IAlbumTagRepository
 }
 
-func NewDeleteAndInsertAlbumTagsUsecase(atr repository.IAlbumTagRepository) *DeleteAndInsertAlbumTagsUsecase {
-	return &DeleteAndInsertAlbumTagsUsecase{atr}
+func NewDeleteAndInsertAlbumTagsUsecase(re repository.IAlbumTagRepository) *DeleteAndInsertAlbumTagsUsecase {
+	return &DeleteAndInsertAlbumTagsUsecase{re}
 }
 
-func (atu *DeleteAndInsertAlbumTagsUsecase) DeleteAndInsertAlbumTags(albumId uint, tagIds []uint) error {
-	if err := atu.atr.DeleteAndInsert(albumId, tagIds); err != nil {
+func (u *DeleteAndInsertAlbumTagsUsecase) DeleteAndInsertAlbumTags(albumId uint, tagIds []uint) error {
+	if err := u.re.DeleteAndInsert(albumId, tagIds); err != nil {
 		return err
 	}
 	return nil

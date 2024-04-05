@@ -18,8 +18,8 @@ func setupAlbumTagControllerTest(mockUsecase *mock.MockAlbumTagUsecase) (*echo.E
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, "/album-tags/counts", nil)
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	return e, rec, c, controller
+	ctx := e.NewContext(req, rec)
+	return e, rec, ctx, controller
 }
 
 func Test_AlbumTagController_GetAlbumCountsByTag(t *testing.T) {
@@ -29,10 +29,10 @@ func Test_AlbumTagController_GetAlbumCountsByTag(t *testing.T) {
 		{TagID: 3, Count: 4},
 		{TagID: 4, Count: 0},
 	}
-	mockUsecase := new(mock.MockAlbumTagUsecase)
-	mockUsecase.On("GetAlbumCountsByTag").Return(expectedCounts, nil)
+	usecase := new(mock.MockAlbumTagUsecase)
+	usecase.On("GetAlbumCountsByTag").Return(expectedCounts, nil)
 
-	_, rec, c, controller := setupAlbumTagControllerTest(mockUsecase)
+	_, rec, c, controller := setupAlbumTagControllerTest(usecase)
 
 	if assert.NoError(t, controller.GetAlbumCountsByTag(c)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
@@ -44,5 +44,5 @@ func Test_AlbumTagController_GetAlbumCountsByTag(t *testing.T) {
 		assert.Equal(t, expectedCounts, counts, "Returned counts should match the expected counts")
 	}
 
-	mockUsecase.AssertExpectations(t)
+	usecase.AssertExpectations(t)
 }

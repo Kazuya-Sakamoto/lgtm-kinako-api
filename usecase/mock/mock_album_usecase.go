@@ -10,32 +10,32 @@ type MockAlbumUsecase struct {
 	mock.Mock
 }
 
-func (mu *MockAlbumUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
-	args := mu.Called()
+func (m *MockAlbumUsecase) GetAllAlbums() ([]domain.AlbumResponse, error) {
+	args := m.Called()
 	return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 
-func (mu *MockAlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
-	args := mu.Called()
+func (m *MockAlbumUsecase) GetRandomAlbums() ([]domain.AlbumResponse, error) {
+	args := m.Called()
 	return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 
-func (mu *MockAlbumUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumResponse, error) {
-	args := mu.Called(tagId)
+func (m *MockAlbumUsecase) GetAlbumsByTag(tagId uint) ([]domain.AlbumResponse, error) {
+	args := m.Called(tagId)
 	return args.Get(0).([]domain.AlbumResponse), args.Error(1)
 }
 
-func (mu *MockAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
-	args := mu.Called(album)
+func (m *MockAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
+	args := m.Called(album)
 	return args.Get(0).(domain.AlbumResponse), args.Error(1)
 }
 
-func (mu *MockAlbumUsecase) DeleteAlbum(userId, albumId uint) error {
-	args := mu.Called(userId, albumId)
+func (m *MockAlbumUsecase) DeleteAlbum(userId, albumId uint) error {
+	args := m.Called(userId, albumId)
 	return args.Error(0)
 }
 
-func (mu *MockAlbumUsecase) UploadImageToS3(data []byte) (string, error) {
-	args := mu.Called(data)
+func (m *MockAlbumUsecase) UploadImageToS3(data []byte) (string, error) {
+	args := m.Called(data)
 	return args.String(0), args.Error(1)
 }

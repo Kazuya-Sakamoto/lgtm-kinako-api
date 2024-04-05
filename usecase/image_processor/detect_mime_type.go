@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func (ip *imageProcessorUsecase) DetectMimeType(data string) (string, error) {
+func (u *imageProcessorUsecase) DetectMimeType(data string) (string, error) {
 	parts := strings.SplitN(data, ";", 2)
 	if len(parts) != 2 {
 		return "", errors.New("無効なデータフォーマット")

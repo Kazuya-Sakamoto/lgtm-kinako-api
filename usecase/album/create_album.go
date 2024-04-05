@@ -7,19 +7,19 @@ import (
 )
 
 type CreateAlbumUsecase struct {
-	ar repository.IAlbumRepository
-	ah handler.IAlbumHandler
+	re repository.IAlbumRepository
+	ha handler.IAlbumHandler
 }
 
-func NewCreateAlbumUsecase(ar repository.IAlbumRepository, ah handler.IAlbumHandler) *CreateAlbumUsecase {
-	return &CreateAlbumUsecase{ar, ah}
+func NewCreateAlbumUsecase(re repository.IAlbumRepository, ha handler.IAlbumHandler) *CreateAlbumUsecase {
+	return &CreateAlbumUsecase{re, ha}
 }
 
-func (au *CreateAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
-	if err := au.ah.AlbumHandler(album); err != nil {
+func (u *CreateAlbumUsecase) CreateAlbum(album domain.Album) (domain.AlbumResponse, error) {
+	if err := u.ha.AlbumHandler(album); err != nil {
 		return domain.AlbumResponse{}, err
 	}
-	if err := au.ar.Create(&album); err != nil {
+	if err := u.re.Create(&album); err != nil {
 		return domain.AlbumResponse{}, err
 	}
 	res := domain.AlbumResponse{

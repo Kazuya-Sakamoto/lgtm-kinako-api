@@ -10,12 +10,12 @@ import (
 )
 
 type IAlbumTagController interface {
-	DeleteAndInsertAlbumTags(c echo.Context) error
-	GetAlbumCountsByTag(c echo.Context) error
+	DeleteAndInsertAlbumTags(ctx echo.Context) error
+	GetAlbumCountsByTag(ctx echo.Context) error
 }
 
 type albumtagController struct {
-	atu album_tag.IAlbumTagUsecase
+	uc album_tag.IAlbumTagUsecase
 }
 
 type albumTagRequest struct {
@@ -23,29 +23,29 @@ type albumTagRequest struct {
 	TagIds  []uint `json:"tagIds"`
 }
 
-func NewAlbumTagController(atu album_tag.IAlbumTagUsecase) IAlbumTagController {
-	return &albumtagController{atu}
+func NewAlbumTagController(uc album_tag.IAlbumTagUsecase) IAlbumTagController {
+	return &albumtagController{uc}
 }
 
-func (ac *albumtagController) DeleteAndInsertAlbumTags(c echo.Context) error {
+func (c *albumtagController) DeleteAndInsertAlbumTags(ctx echo.Context) error {
 	req := new(albumTagRequest)
-	if err := c.Bind(req); err != nil {
-		return c.JSON(http.StatusBadRequest, fmt.Sprintf("Error binding request: %s", err.Error()))
+	if err := ctx.Bind(req); err != nil {
+		return ctx.JSON(http.StatusBadRequest, fmt.Sprintf("Error binding request: %s", err.Error()))
 	}
 
-	err := ac.atu.DeleteAndInsertAlbumTags(req.AlbumId, req.TagIds)
+	err := c.uc.DeleteAndInsertAlbumTags(req.AlbumId, req.TagIds)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Error upserting album tags: %s", err.Error()))
+		return ctx.JSON(http.StatusInternalServerError, fmt.Sprintf("Error upserting album tags: %s", err.Error()))
 	}
 
-	return c.NoContent(http.StatusOK)
+	return ctx.NoContent(http.StatusOK)
 }
 
-func (ac *albumtagController) GetAlbumCountsByTag(c echo.Context) error {
-	counts, err := ac.atu.GetAlbumCountsByTag()
+func (c *albumtagController) GetAlbumCountsByTag(ctx echo.Context) error {
+	counts, err := c.uc.GetAlbumCountsByTag()
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, fmt.Sprintf("Error retrieving album counts by tag: %s", err.Error()))
+		return ctx.JSON(http.StatusInternalServerError, fmt.Sprintf("Error retrieving album counts by tag: %s", err.Error()))
 	}
 
-	return c.JSON(http.StatusOK, counts)
+	return ctx.JSON(http.StatusOK, counts)
 }

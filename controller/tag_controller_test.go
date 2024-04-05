@@ -20,8 +20,8 @@ func setupTagControllerTest(mockTagUsecase *mock.MockTagUsecase, mockAlbumTagUse
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, url, nil)
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	return e, rec, c, controller
+	ctx := e.NewContext(req, rec)
+	return e, rec, ctx, controller
 }
 
 func Test_TagController_GetTags(t *testing.T) {
@@ -35,12 +35,12 @@ func Test_TagController_GetTags(t *testing.T) {
 			Name: "tag2",
 		},
 	}
-	mt := new(mock.MockTagUsecase)
-	mat := new(mock.MockAlbumTagUsecase)
-	mt.On("GetTags").Return(e, nil)
-	_, rec, c, controller := setupTagControllerTest(mt, mat, "/tags")
+	tagUsecase := new(mock.MockTagUsecase)
+	albumTagUsecase := new(mock.MockAlbumTagUsecase)
+	tagUsecase.On("GetTags").Return(e, nil)
+	_, rec, ctx, controller := setupTagControllerTest(tagUsecase, albumTagUsecase, "/tags")
 
-	if assert.NoError(t, controller.GetTags(c)) {
+	if assert.NoError(t, controller.GetTags(ctx)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 
 		var tags []domain.TagResponse

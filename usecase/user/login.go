@@ -13,20 +13,20 @@ import (
 )
 
 type LoginUsecase struct {
-	ur repository.IUserRepository
-	uh handler.IUserHandler
+	re repository.IUserRepository
+	ha handler.IUserHandler
 }
 
-func NewLoginUsecase(ur repository.IUserRepository, uh handler.IUserHandler) *LoginUsecase {
-	return &LoginUsecase{ur, uh}
+func NewLoginUsecase(re repository.IUserRepository, ha handler.IUserHandler) *LoginUsecase {
+	return &LoginUsecase{re, ha}
 }
 
-func (lu *LoginUsecase) Login(user domain.User) (string, error) {
-	if err := lu.uh.UserHandler(user); err != nil {
+func (u *LoginUsecase) Login(user domain.User) (string, error) {
+	if err := u.ha.UserHandler(user); err != nil {
 		return "", err
 	}
 	storedUser := domain.User{}
-	if err := lu.ur.FindByEmail(&storedUser, user.Email); err != nil {
+	if err := u.re.FindByEmail(&storedUser, user.Email); err != nil {
 		return "", err
 	}
 	err := bcrypt.CompareHashAndPassword([]byte(storedUser.Password), []byte(user.Password))

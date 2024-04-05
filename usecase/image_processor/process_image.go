@@ -23,7 +23,7 @@ func NewImageProcessor() IImageProcessorUsecase {
 	return &imageProcessorUsecase{}
 }
 
-func (ip *imageProcessorUsecase) ProcessImage(inputImage image.Image) ([]byte, error) {
+func (u *imageProcessorUsecase) ProcessImage(inputImage image.Image) ([]byte, error) {
 	dc := gg.NewContextForImage(inputImage)
 	dc.SetColor(color.White)
 
@@ -32,7 +32,7 @@ func (ip *imageProcessorUsecase) ProcessImage(inputImage image.Image) ([]byte, e
 		return nil, fmt.Errorf("failed to load font: %v", err)
 	}
 
-	if err := ip.drawText(dc); err != nil {
+	if err := u.drawText(dc); err != nil {
 		return nil, fmt.Errorf("failed to draw text: %v", err)
 	}
 
@@ -44,7 +44,7 @@ func (ip *imageProcessorUsecase) ProcessImage(inputImage image.Image) ([]byte, e
 	return buffer.Bytes(), nil
 }
 
-func (ip *imageProcessorUsecase) drawText(dc *gg.Context) error {
+func (u *imageProcessorUsecase) drawText(dc *gg.Context) error {
 	text := defaultText
 	textWidth, textHeight := dc.MeasureString(text)
 	x := (float64(dc.Width()) - textWidth) / 2

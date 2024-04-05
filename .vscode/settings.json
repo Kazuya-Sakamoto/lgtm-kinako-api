@@ -10,5 +10,21 @@
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[go]": {
     "editor.defaultFormatter": "golang.go"
-  }
+  },
+  "[sql]": {
+    "editor.defaultFormatter": "inferrinizzard.prettier-sql-vscode"
+  },
+  "Prettier-SQL.commaPosition": "after",
+  "Prettier-SQL.denseOperators": false,
+  "Prettier-SQL.ignoreTabSettings": false,
+  "Prettier-SQL.expressionWidth": 50,
+  "Prettier-SQL.indentStyle": "standard",
+  "Prettier-SQL.insertSpacesOverride": true,
+  "Prettier-SQL.keywordCase": "preserve",
+  "Prettier-SQL.linesBetweenQueries": 1,
+  "Prettier-SQL.logicalOperatorNewline": "before",
+  "Prettier-SQL.newlineBeforeSemicolon": false,
+  "Prettier-SQL.SQLFlavourOverride": "sql",
+  "Prettier-SQL.tabSizeOverride": 2,
+  "Prettier-SQL.tabulateAlias": false
 }

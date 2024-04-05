@@ -6,15 +6,15 @@ import (
 )
 
 type GetAlbumCountsByTagUsecase struct {
-	atr repository.IAlbumTagRepository
+	re repository.IAlbumTagRepository
 }
 
-func NewGetAlbumCountsByTagUsecase(atr repository.IAlbumTagRepository) *GetAlbumCountsByTagUsecase {
-	return &GetAlbumCountsByTagUsecase{atr}
+func NewGetAlbumCountsByTagUsecase(re repository.IAlbumTagRepository) *GetAlbumCountsByTagUsecase {
+	return &GetAlbumCountsByTagUsecase{re}
 }
 
-func (atu *GetAlbumCountsByTagUsecase) GetAlbumCountsByTag() ([]domain.TagCount, error) {
-	res, err := atu.atr.FindCountsByTag()
+func (u *GetAlbumCountsByTagUsecase) GetAlbumCountsByTag() ([]domain.TagCount, error) {
+	res, err := u.re.FindCountsByTag()
 	if err != nil {
 		return nil, err
 	}

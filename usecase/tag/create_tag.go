@@ -7,19 +7,19 @@ import (
 )
 
 type CreateTagUsecase struct {
-	tr repository.ITagRepository
-	th handler.ITagHandler
+	re repository.ITagRepository
+	ha handler.ITagHandler
 }
 
-func NewCreateTagUsecase(tr repository.ITagRepository, th handler.ITagHandler) *CreateTagUsecase {
-	return &CreateTagUsecase{tr, th}
+func NewCreateTagUsecase(re repository.ITagRepository, ha handler.ITagHandler) *CreateTagUsecase {
+	return &CreateTagUsecase{re, ha}
 }
 
-func (tu *CreateTagUsecase) CreateTag(tag domain.Tag) (domain.TagResponse, error) {
-	if err := tu.th.TagHandler(tag); err != nil {
+func (u *CreateTagUsecase) CreateTag(tag domain.Tag) (domain.TagResponse, error) {
+	if err := u.ha.TagHandler(tag); err != nil {
 		return domain.TagResponse{}, err
 	}
-	if err := tu.tr.Create(&tag); err != nil {
+	if err := u.re.Create(&tag); err != nil {
 		return domain.TagResponse{}, err
 	}
 	res := domain.TagResponse(tag)

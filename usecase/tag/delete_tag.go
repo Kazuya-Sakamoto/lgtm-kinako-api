@@ -1,21 +1,19 @@
 package tag
 
 import (
-	"lgtm-kinako-api/handler"
 	"lgtm-kinako-api/repository"
 )
 
 type DeleteTagUsecase struct {
-	tr repository.ITagRepository
-	th handler.ITagHandler
+	re repository.ITagRepository
 }
 
-func NewDeleteTagUsecase(tr repository.ITagRepository, th handler.ITagHandler) *DeleteTagUsecase {
-	return &DeleteTagUsecase{tr, th}
+func NewDeleteTagUsecase(re repository.ITagRepository) *DeleteTagUsecase {
+	return &DeleteTagUsecase{re}
 }
 
-func (tu *DeleteTagUsecase) DeleteTag(tagId uint) error {
-	if err := tu.tr.DeleteByTagID(tagId); err != nil {
+func (u *DeleteTagUsecase) DeleteTag(tagId uint) error {
+	if err := u.re.DeleteByTagID(tagId); err != nil {
 		return err
 	}
 	return nil

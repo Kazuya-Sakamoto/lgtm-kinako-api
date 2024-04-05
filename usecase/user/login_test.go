@@ -18,20 +18,20 @@ func setupLoginUsecase(t *testing.T) (*mock.MockUserRepository, *mock.MockUserHa
 	originalSecret := os.Getenv("SECRET")
 	os.Setenv("SECRET", "testsecret")
 
-	mr := new(mock.MockUserRepository)
-	mh := new(mock.MockUserHandler)
-	usecase := NewLoginUsecase(mr, mh)
+	re := new(mock.MockUserRepository)
+	ha := new(mock.MockUserHandler)
+	usecase := NewLoginUsecase(re, ha)
 
-	return mr, mh, usecase, func() {
+	return re, ha, usecase, func() {
 		os.Setenv("SECRET", originalSecret)
-		mr.AssertExpectations(t)
-		mh.AssertExpectations(t)
+		re.AssertExpectations(t)
+		ha.AssertExpectations(t)
 	}
 }
 
 func Test_UserUsecase_Login(t *testing.T) {
 	t.Run("正常にLoginが成功すること", func(t *testing.T) {
-		mr, mh, usecase, cleanup := setupLoginUsecase(t)
+		re, ha, usecase, cleanup := setupLoginUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -46,8 +46,8 @@ func Test_UserUsecase_Login(t *testing.T) {
 		/*
 			モックの期待値の設定
 		*/
-		mh.On("UserHandler", input).Return(nil)
-		mr.On("FindByEmail", &domain.User{}, input.Email).Return(user, nil)
+		ha.On("UserHandler", input).Return(nil)
+		re.On("FindByEmail", &domain.User{}, input.Email).Return(user, nil)
 		/*
 			ログインの実行
 		*/
@@ -74,12 +74,12 @@ func Test_UserUsecase_Login(t *testing.T) {
 			t.Fail()
 		}
 		// モックの検証
-		mh.AssertExpectations(t)
-		mr.AssertExpectations(t)
+		ha.AssertExpectations(t)
+		re.AssertExpectations(t)
 	})
 
 	t.Run("ユーザーが存在しない場合Loginが失敗すること", func(t *testing.T) {
-		mr, mh, usecase, cleanup := setupLoginUsecase(t)
+		re, ha, usecase, cleanup := setupLoginUsecase(t)
 		defer cleanup()
 
 		input := domain.User{
@@ -89,8 +89,8 @@ func Test_UserUsecase_Login(t *testing.T) {
 		/*
 			ユーザーが見つからない場合のモックの設定
 		*/
-		mh.On("UserHandler", input).Return(nil)
-		mr.On("FindByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
+		ha.On("UserHandler", input).Return(nil)
+		re.On("FindByEmail", &domain.User{}, input.Email).Return(domain.User{}, errors.New("user not found"))
 		/*
 			ログインの実行
 		*/
@@ -100,7 +100,7 @@ func Test_UserUsecase_Login(t *testing.T) {
 		/*
 			モックの検証
 		*/
-		mh.AssertExpectations(t)
-		mr.AssertExpectations(t)
+		ha.AssertExpectations(t)
+		re.AssertExpectations(t)
 	})
 }

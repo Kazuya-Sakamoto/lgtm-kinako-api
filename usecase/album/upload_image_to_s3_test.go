@@ -4,8 +4,6 @@ import (
 	"errors"
 	"testing"
 
-	"lgtm-kinako-api/repository/mock"
-
 	"github.com/aws/aws-sdk-go/service/s3"
 	testify_mock "github.com/stretchr/testify/mock"
 	"github.com/stretchr/testify/require"
@@ -26,9 +24,7 @@ func (m *MockS3Service) PutObject(input *s3.PutObjectInput) (*s3.PutObjectOutput
 
 func Test_AlbumUsecase_CreateAlbume_UploadImageToS3(t *testing.T) {
 	mockS3 := new(MockS3Service)
-	mr := new(mock.MockAlbumRepository)
-	mh := new(mock.MockAlbumHandler)
-	usecase := NewUploadImageToS3Usecase(mr, mh)
+	usecase := NewUploadImageToS3Usecase()
 
 	t.Run("画像が正常にアップロードされること", func(t *testing.T) {
 		/*

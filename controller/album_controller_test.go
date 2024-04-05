@@ -21,12 +21,12 @@ func setupAlbumControllerTest(mockUsecase *mock.MockAlbumUsecase, url string) (*
 	e := echo.New()
 	req := httptest.NewRequest(http.MethodGet, url, nil)
 	rec := httptest.NewRecorder()
-	c := e.NewContext(req, rec)
-	return e, rec, c, controller
+	ctx := e.NewContext(req, rec)
+	return e, rec, ctx, controller
 }
 
-func setJWTToken(c echo.Context, userID uint) {
-	c.Set("user", &jwt.Token{
+func setJWTToken(ctx echo.Context, userID uint) {
+	ctx.Set("user", &jwt.Token{
 		Claims: jwt.MapClaims{
 			"user_id": float64(userID),
 		},
@@ -50,12 +50,12 @@ func Test_AlbumController_GetAllAlbums(t *testing.T) {
 			UpdatedAt: time.Now(),
 		},
 	}
-	mau := new(mock.MockAlbumUsecase)
-	mau.On("GetAllAlbums").Return(expectedAlbums, nil)
-	_, rec, c, controller := setupAlbumControllerTest(mau, "/album")
-	setJWTToken(c, 1)
+	usecase := new(mock.MockAlbumUsecase)
+	usecase.On("GetAllAlbums").Return(expectedAlbums, nil)
+	_, rec, ctx, controller := setupAlbumControllerTest(usecase, "/album")
+	setJWTToken(ctx, 1)
 
-	if assert.NoError(t, controller.GetAllAlbums(c)) {
+	if assert.NoError(t, controller.GetAllAlbums(ctx)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 
 		var albums []domain.AlbumResponse
@@ -91,11 +91,11 @@ func Test_AlbumController_GetRandomAlbums(t *testing.T) {
 			UpdatedAt: time.Now(),
 		},
 	}
-	mau := new(mock.MockAlbumUsecase)
-	mau.On("GetRandomAlbums").Return(expectedAlbums, nil)
-	_, rec, c, controller := setupAlbumControllerTest(mau, "/album/random")
+	usecase := new(mock.MockAlbumUsecase)
+	usecase.On("GetRandomAlbums").Return(expectedAlbums, nil)
+	_, rec, ctx, controller := setupAlbumControllerTest(usecase, "/album/random")
 
-	if assert.NoError(t, controller.GetRandomAlbums(c)) {
+	if assert.NoError(t, controller.GetRandomAlbums(ctx)) {
 		assert.Equal(t, http.StatusOK, rec.Code)
 
 		var albums []domain.AlbumResponse

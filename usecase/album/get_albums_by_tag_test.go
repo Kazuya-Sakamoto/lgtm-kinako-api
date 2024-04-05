@@ -13,18 +13,17 @@ import (
 )
 
 func setupGetAlbumsByTagUsecase(t *testing.T) (*mock.MockAlbumRepository, *GetAlbumsByTagUsecase, func()) {
-	mr := new(mock.MockAlbumRepository)
-	mh := new(mock.MockAlbumHandler)
-	usecase := NewGetAlbumsByTagUsecase(mr, mh)
+	re := new(mock.MockAlbumRepository)
+	usecase := NewGetAlbumsByTagUsecase(re)
 
-	return mr, usecase, func() {
-		mr.AssertExpectations(t)
+	return re, usecase, func() {
+		re.AssertExpectations(t)
 	}
 }
 
 func Test_AlbumUsecase_GetAlbumsByTag(t *testing.T) {
 	t.Run("正常にアルバムが取得できること", func(t *testing.T) {
-		mr, usecase, cleanup := setupGetAlbumsByTagUsecase(t)
+		re, usecase, cleanup := setupGetAlbumsByTagUsecase(t)
 		defer cleanup()
 
 		ea := []domain.Album{
@@ -46,7 +45,7 @@ func Test_AlbumUsecase_GetAlbumsByTag(t *testing.T) {
 			},
 		}
 
-		mr.On("FindByTag", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
+		re.On("FindByTag", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Album)
 			*arg = ea
 		})

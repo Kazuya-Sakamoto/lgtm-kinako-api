@@ -11,19 +11,19 @@ import (
 )
 
 func setupCreateAlbumUsecase(t *testing.T) (*mock.MockAlbumRepository, *mock.MockAlbumHandler, *CreateAlbumUsecase, func()) {
-	mr := new(mock.MockAlbumRepository)
-	mh := new(mock.MockAlbumHandler)
-	usecase := NewCreateAlbumUsecase(mr, mh)
+	re := new(mock.MockAlbumRepository)
+	ha := new(mock.MockAlbumHandler)
+	usecase := NewCreateAlbumUsecase(re, ha)
 
-	return mr, mh, usecase, func() {
-		mr.AssertExpectations(t)
-		mh.AssertExpectations(t)
+	return re, ha, usecase, func() {
+		re.AssertExpectations(t)
+		ha.AssertExpectations(t)
 	}
 }
 
 func Test_AlbumUsecase_CreateAlbum(t *testing.T) {
 	t.Run("アルバムが正常に作成されること", func(t *testing.T) {
-		mr, mh, usecase, cleanup := setupCreateAlbumUsecase(t)
+		re, ha, usecase, cleanup := setupCreateAlbumUsecase(t)
 		defer cleanup()
 
 		album := domain.Album{
@@ -34,8 +34,8 @@ func Test_AlbumUsecase_CreateAlbum(t *testing.T) {
 			UpdatedAt: time.Now(),
 		}
 
-		mh.On("AlbumHandler", album).Return(nil)
-		mr.On("Create", &album).Return(nil)
+		ha.On("AlbumHandler", album).Return(nil)
+		re.On("Create", &album).Return(nil)
 
 		res, err := usecase.CreateAlbum(album)
 

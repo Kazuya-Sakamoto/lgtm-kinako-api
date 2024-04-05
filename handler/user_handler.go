@@ -17,7 +17,7 @@ func NewUserHandler() IUserHandler {
 	return &userHandler{}
 }
 
-func (uv *userHandler) UserHandler(user domain.User) error {
+func (ha *userHandler) UserHandler(user domain.User) error {
 	return handler.ValidateStruct(&user,
 		handler.Field(
 			&user.Email,

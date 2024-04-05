@@ -13,18 +13,17 @@ import (
 )
 
 func setupGetRandomAlbumsUsecase(t *testing.T) (*mock.MockAlbumRepository, *GetRandomAlbumsUsecase, func()) {
-	mr := new(mock.MockAlbumRepository)
-	mh := new(mock.MockAlbumHandler)
-	usecase := NewGetRandomAlbumsUsecase(mr, mh)
+	re := new(mock.MockAlbumRepository)
+	usecase := NewGetRandomAlbumsUsecase(re)
 
-	return mr, usecase, func() {
-		mr.AssertExpectations(t)
+	return re, usecase, func() {
+		re.AssertExpectations(t)
 	}
 }
 
 func Test_AlbumUsecase_GetRandomAlbums(t *testing.T) {
 	t.Run("正常にアルバムが取得できること", func(t *testing.T) {
-		mr, usecase, cleanup := setupGetRandomAlbumsUsecase(t)
+		re, usecase, cleanup := setupGetRandomAlbumsUsecase(t)
 		defer cleanup()
 
 		ea := []domain.Album{
@@ -46,7 +45,7 @@ func Test_AlbumUsecase_GetRandomAlbums(t *testing.T) {
 			},
 		}
 
-		mr.On("FindRandom", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
+		re.On("FindRandom", testify_mock.AnythingOfType("*[]domain.Album")).Return(nil).Run(func(args testify_mock.Arguments) {
 			arg := args.Get(0).(*[]domain.Album)
 			*arg = ea
 		})

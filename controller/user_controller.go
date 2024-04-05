@@ -12,54 +12,54 @@ import (
 )
 
 type IUserController interface {
-	SignUp(c echo.Context) error
-	LogIn(c echo.Context) error
-	CsrfToken(c echo.Context) error
+	SignUp(ctx echo.Context) error
+	LogIn(ctx echo.Context) error
+	CsrfToken(ctx echo.Context) error
 }
 
 type userController struct {
-	uu user.IUserUsecase
+	uc user.IUserUsecase
 }
 
-func NewUserController(uu user.IUserUsecase) IUserController {
-	return &userController{uu}
+func NewUserController(uc user.IUserUsecase) IUserController {
+	return &userController{uc}
 }
 
-func (uc *userController) SignUp(c echo.Context) error {
+func (c *userController) SignUp(ctx echo.Context) error {
 	user := domain.User{}
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+	if err := ctx.Bind(&user); err != nil {
+		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
-	userRes, err := uc.uu.SignUp(user)
+	userRes, err := c.uc.SignUp(user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
-	return c.JSON(http.StatusCreated, userRes)
+	return ctx.JSON(http.StatusCreated, userRes)
 }
 
-func (uc *userController) LogIn(c echo.Context) error {
+func (c *userController) LogIn(ctx echo.Context) error {
 	user := domain.User{}
-	if err := c.Bind(&user); err != nil {
-		return c.JSON(http.StatusBadRequest, err.Error())
+	if err := ctx.Bind(&user); err != nil {
+		return ctx.JSON(http.StatusBadRequest, err.Error())
 	}
 
-	tokenString, err := uc.uu.Login(user)
+	tokenString, err := c.uc.Login(user)
 	if err != nil {
-		return c.JSON(http.StatusInternalServerError, err.Error())
+		return ctx.JSON(http.StatusInternalServerError, err.Error())
 	}
-	setTokenCookie(c, tokenString)
+	setTokenCookie(ctx, tokenString)
 
-	return c.JSON(http.StatusOK, tokenString)
+	return ctx.JSON(http.StatusOK, tokenString)
 }
 
-func (uc *userController) CsrfToken(c echo.Context) error {
-	token := c.Get("csrf").(string)
-	return c.JSON(http.StatusOK, echo.Map{
+func (c *userController) CsrfToken(ctx echo.Context) error {
+	token := ctx.Get("csrf").(string)
+	return ctx.JSON(http.StatusOK, echo.Map{
 		"csrf_token": token,
 	})
 }
 
-func setTokenCookie(c echo.Context, tokenString string) {
+func setTokenCookie(ctx echo.Context, tokenString string) {
 	cookie := new(http.Cookie)
 	cookie.Name = "token"
 	cookie.Value = tokenString
@@ -69,5 +69,5 @@ func setTokenCookie(c echo.Context, tokenString string) {
 	cookie.Secure = true
 	cookie.HttpOnly = true
 	cookie.SameSite = http.SameSiteNoneMode
-	c.SetCookie(cookie)
+	ctx.SetCookie(cookie)
 }
