@@ -16,14 +16,18 @@ import (
 
 func setupLoginUsecase(t *testing.T) (*mock.MockUserRepository, *mock.MockUserHandler, *LoginUsecase, func()) {
 	originalSecret := os.Getenv("SECRET")
-	os.Setenv("SECRET", "testsecret")
+	if err := os.Setenv("SECRET", "testsecret"); err != nil {
+		t.Fatalf("failed to set environment variable: %v", err)
+	}
 
 	re := new(mock.MockUserRepository)
 	ha := new(mock.MockUserHandler)
 	usecase := NewLoginUsecase(re, ha)
 
 	return re, ha, usecase, func() {
-		os.Setenv("SECRET", originalSecret)
+		if err := os.Setenv("SECRET", originalSecret); err != nil {
+			t.Fatalf("failed to reset environment variable: %v", err)
+		}
 		re.AssertExpectations(t)
 		ha.AssertExpectations(t)
 	}
