@@ -16,8 +16,75 @@ jobs:
           name: "Run Tests"
           command: go test ./...
 
+  check-lint:
+    docker:
+      - image: golang:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-cache-{{ checksum "go.sum" }}
+      - run:
+          name: "Setup errcheck"
+          command: go get -u github.com/kisielk/errcheck
+      - run:
+          name: "Run go vet"
+          command: go vet ./...
+      - run:
+          name: "Run errcheck"
+          command: errcheck ./...
+      - save_cache:
+          key: go-mod-cache-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+
+  code-quality-check:
+    docker:
+      - image: golang:latest
+    steps:
+      - checkout
+      - run:
+          name: "Install golint"
+          command: go get -u golang.org/x/lint/golint
+      - run:
+          name: "Run golint"
+          command: golint ./...
+
+  code-format-check:
+    docker:
+      - image: golang:latest
+    steps:
+      - checkout
+      - run:
+          name: "Check code formatting with gofmt"
+          command: gofmt -l -e .
+
+  security-check:
+    docker:
+      - image: golang:latest
+    steps:
+      - checkout
+      - run:
+          name: "Install gosec"
+          command: go get -u github.com/securego/gosec/cmd/gosec
+      - run:
+          name: "Run gosec"
+          command: gosec ./...
+
 workflows:
   version: 2
-  build-and-test:
+  all:
     jobs:
       - build-and-test
+      - check-lint:
+          requires:
+            - build-and-test
+      - code-quality-check:
+          requires:
+            - build-and-test
+      - code-format-check:
+          requires:
+            - build-and-test
+      - security-check:
+          requires:
+            - build-and-test
