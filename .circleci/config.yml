@@ -77,6 +77,15 @@ jobs:
             echo 'export GOROOT=$(go env GOROOT)' >> $BASH_ENV
             echo 'export PATH=$PATH:$GOPATH/bin:$GOROOT/bin' >> $BASH_ENV
       - run:
+          name: "Clear dependencies cache"
+          command: go clean -modcache
+      - run:
+          name: "Install dependencies"
+          command: go mod download
+      - run:
+          name: "Build the project"
+          command: go build ./...
+      - run:
           name: "Install gosec"
           command: go install github.com/securego/gosec/cmd/gosec@latest
       - run:
