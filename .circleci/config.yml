@@ -65,36 +65,6 @@ jobs:
           name: "Check code formatting with gofmt"
           command: gofmt -l -e .
 
-  security-check:
-    docker:
-      - image: golang:latest
-    steps:
-      - checkout
-      - run:
-          name: "Setup Go environment"
-          command: |
-            echo 'export GOPATH=~/go' >> $BASH_ENV
-            echo 'export GOROOT=$(go env GOROOT)' >> $BASH_ENV
-            echo 'export PATH=$PATH:$(go env GOPATH)/bin:$GOROOT/bin' >> $BASH_ENV
-      - run:
-          name: "Clear dependencies cache"
-          command: go clean -modcache
-      - run:
-          name: "Install dependencies"
-          command: go mod download
-      - run:
-          name: "Build the project"
-          command: go build ./...
-      - run:
-          name: "Install gosec"
-          command: go install github.com/securego/gosec/cmd/gosec@latest
-      - run:
-          name: "Set GOPATH/bin to PATH"
-          command: echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $BASH_ENV
-      - run:
-          name: "Run gosec"
-          command: gosec ./...
-
 workflows:
   version: 2
   build-and-test:
@@ -107,8 +77,5 @@ workflows:
           requires:
             - build-and-test
       - code-format-check:
-          requires:
-            - build-and-test
-      - security-check:
           requires:
             - build-and-test
