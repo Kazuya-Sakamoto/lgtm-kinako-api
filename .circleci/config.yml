@@ -71,6 +71,9 @@ jobs:
     steps:
       - checkout
       - run:
+          name: "Enable Go Modules"
+          command: echo 'export GO111MODULE=on' >> $BASH_ENV
+      - run:
           name: "Install gosec"
           command: go install github.com/securego/gosec/cmd/gosec@latest
       - run:
