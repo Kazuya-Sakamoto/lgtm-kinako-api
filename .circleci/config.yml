@@ -75,7 +75,7 @@ jobs:
           command: |
             echo 'export GOPATH=~/go' >> $BASH_ENV
             echo 'export GOROOT=$(go env GOROOT)' >> $BASH_ENV
-            echo 'export PATH=$PATH:$GOPATH/bin:$GOROOT/bin' >> $BASH_ENV
+            echo 'export PATH=$PATH:$(go env GOPATH)/bin:$GOROOT/bin' >> $BASH_ENV
       - run:
           name: "Clear dependencies cache"
           command: go clean -modcache
