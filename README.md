@@ -1,5 +1,7 @@
 # lgtm-kinako-api
 
+![LGTM](https://d18g0hf2wnz3gs.cloudfront.net/20240413001121.JPG)
+
 ## 概要
 
 きなこ（愛犬）の LGTM 画像を共有出来るサービスです。画像をクリックすると Markdown がコピーされ使用することができます。
@@ -19,26 +21,26 @@
 ## その他環境
 
 - API: Render
-- Storage: AWS s3
+- Storage: AWS S3
 - CDN: AWS cloudfront
-- DB: PlanetScale
+- DB: TiDB
 - Watch: UptimeRobot
 
 ## 環境構築
 
 - コンテナ起動
 
-```
+```bash
 $ docker compose up -d
 ```
 
 - path の追加
 
-```
+```bash
 $ nano ~/.zshrc
 ```
 
-```
+```bash
 # golang
 export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
@@ -46,48 +48,48 @@ export PATH=$PATH:$GOPATH/bin
 
 - ~/.zshrc を読み込み直す
 
-```
+```bash
 $ source ~/.zshrc
 ```
 
 - 不要な依存関係の削除 / 必要な依存関係の追加
 
-```
+```bash
 $ go mod tidy
 ```
 
 - air と dlv のコマンドが実行できるか確認
 
-```
+```bash
 $ air -v
 $ dlv -h
 ```
 
 - air と dlv をインストールしていない場合は以下でインストール
 
-```
+```bash
 $ go install github.com/cosmtrek/air@latest
 ```
 
-```
+```bash
 $ go install github.com/go-delve/delve/cmd/dlv@latest
 ```
 
 - マイグレーション
 
-```
+```bash
 $ GO_ENV=dev go run migrate/migrate.go
 ```
 
 - 起動
 
-```
+```bash
 $ GO_ENV=dev air
 ```
 
 - 動作確認
 
-```
+```bash
 $ curl http://localhost:8080/api/v1/albums
 
 [{"id":107,"title":"初めてのきなこ","image":"...
