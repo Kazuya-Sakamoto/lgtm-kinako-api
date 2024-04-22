@@ -18,7 +18,7 @@ func NewRouter(
 	atu controller.IAlbumTagController,
 ) *echo.Echo {
 	logConfig := middleware.LoggerConfig{
-		Format: "${host}${uri} METHOD:${method} STATUS:${status} TIME:${time_rfc3339} LATENCY:${latency_human} ERROR:${error}\n",
+		Format: "${method} ${status} ${uri} ${time_rfc3339} LATENCY:${latency_human} ${error} \n",
 	}
 
 	e := echo.New()
