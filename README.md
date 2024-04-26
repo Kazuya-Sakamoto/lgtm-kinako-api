@@ -31,7 +31,7 @@
 - コンテナ起動
 
 ```bash
-$ docker compose up -d
+$ make up
 ```
 
 - path の追加
@@ -78,13 +78,13 @@ $ go install github.com/go-delve/delve/cmd/dlv@latest
 - マイグレーション
 
 ```bash
-$ GO_ENV=dev go run migrate/migrate.go
+$ make migration
 ```
 
 - 起動
 
 ```bash
-$ GO_ENV=dev air
+$ make dev
 ```
 
 - 動作確認
@@ -93,6 +93,15 @@ $ GO_ENV=dev air
 $ curl http://localhost:8080/api/v1/albums
 
 [{"id":107,"title":"初めてのきなこ","image":"...
+```
+
+## Tips
+
+- うまく起動しない時
+
+```bash
+$ make down
+$ make up
 ```
 
 ## その他ドキュメント
