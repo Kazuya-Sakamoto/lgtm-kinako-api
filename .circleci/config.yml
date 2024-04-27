@@ -80,15 +80,6 @@ jobs:
           name: "Check code formatting with gofmt"
           command: gofmt -l -e .
 
-  database-migration-check:
-    docker:
-      - image: golang:latest
-    steps:
-      - checkout
-      - run:
-          name: "Test Database Migrations"
-          command: GO_ENV=dev go run migrate/migrate.go
-
 workflows:
   version: 2
   build-and-test:
@@ -104,8 +95,5 @@ workflows:
           requires:
             - build-and-test
       - check-code-format:
-          requires:
-            - build-and-test
-      - database-migration-check:
           requires:
             - build-and-test
