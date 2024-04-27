@@ -90,7 +90,7 @@ $ make dev
 - 動作確認
 
 ```bash
-$ curl http://localhost:8080/api/v1/albums
+$ curl http://localhost:8081/api/v1/albums
 
 [{"id":107,"title":"初めてのきなこ","image":"...
 ```

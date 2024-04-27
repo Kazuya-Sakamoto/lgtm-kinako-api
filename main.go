@@ -45,5 +45,5 @@ func main() {
 	albumTagController := controller.NewAlbumTagController(albumTagUsecase)
 
 	e := router.NewRouter(albumController, userController, tagController, albumTagController)
-	e.Logger.Fatal(e.Start(":8080"))
+	e.Logger.Fatal(e.Start(":8081"))
 }
