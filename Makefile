@@ -1,7 +1,7 @@
 up:
 	docker compose up -d
 
-migrate:
+migration:
 	GO_ENV=dev go run migrate/migrate.go
 
 dev:

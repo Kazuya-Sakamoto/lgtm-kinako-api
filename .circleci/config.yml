@@ -1,14 +1,30 @@
 version: 2.1
 
 jobs:
+  install-dependencies:
+    docker:
+      - image: golang:latest
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - go-mod-cache-{{ checksum "go.sum" }}
+      - run:
+          name: "Install Dependencies"
+          command: go mod download
+      - save_cache:
+          key: go-mod-cache-{{ checksum "go.sum" }}
+          paths:
+            - "/go/pkg/mod"
+
   build-and-test:
     docker:
       - image: golang:latest
     steps:
       - checkout
-      - run:
-          name: "Install Dependencies"
-          command: go mod download
+      - restore_cache:
+          keys:
+            - go-mod-cache-{{ checksum "go.sum" }}
       - run:
           name: "Build"
           command: go build -o app
@@ -36,31 +52,30 @@ jobs:
       - run:
           name: "Run errcheck"
           command: errcheck ./...
-      - save_cache:
-          key: go-mod-cache-{{ checksum "go.sum" }}
-          paths:
-            - "/go/pkg/mod"
 
-  code-quality-check:
+  check-code-quality:
     docker:
       - image: golang:latest
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - go-mod-cache-{{ checksum "go.sum" }}
       - run:
           name: "Install golint"
           command: go install golang.org/x/lint/golint@latest
       - run:
-          name: "Set GOPATH/bin to PATH"
-          command: echo 'export PATH=$PATH:$(go env GOPATH)/bin' >> $BASH_ENV
-      - run:
           name: "Run golint"
           command: golint ./...
 
-  code-format-check:
+  check-code-format:
     docker:
       - image: golang:latest
     steps:
       - checkout
+      - restore_cache:
+          keys:
+            - go-mod-cache-{{ checksum "go.sum" }}
       - run:
           name: "Check code formatting with gofmt"
           command: gofmt -l -e .
@@ -69,13 +84,16 @@ workflows:
   version: 2
   build-and-test:
     jobs:
-      - build-and-test
+      - install-dependencies
+      - build-and-test:
+          requires:
+            - install-dependencies
       - check-lint:
           requires:
             - build-and-test
-      - code-quality-check:
+      - check-code-quality:
           requires:
             - build-and-test
-      - code-format-check:
+      - check-code-format:
           requires:
             - build-and-test
