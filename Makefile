@@ -9,3 +9,7 @@ dev:
 
 down:
 	docker compose down
+
+connect_db:
+	docker exec -it lgtm-kinako-api_dev-mysql_1 mysql -u root -p
+# passowrdは @Kazuya-Sakamotoに確認
