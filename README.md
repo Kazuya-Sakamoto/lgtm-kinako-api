@@ -3,6 +3,7 @@
 # lgtm-kinako-api
 
 <div style="display: flex; gap: 15px; flex-wrap: wrap; align-items: center;">
+  <img src="https://img.shields.io/badge/License-MIT-blue" alt="License">
   <img src="https://img.shields.io/badge/GoLang-1.20.7-blue?logo=go&logoColor=white" alt="GoLang">
   <img src="https://img.shields.io/badge/Echo-v4.11.1-green?logo=go&logoColor=white" alt="Echo">
   <img src="https://img.shields.io/badge/MySQL-v8.0-orange?logo=mysql&logoColor=white" alt="MySQL">
