@@ -24,7 +24,7 @@
 きなこ（愛犬）の LGTM 画像を共有出来るサービスです。画像をクリックすると Markdown がコピーされ使用することができます。
 
 - 🌐 [サービス URL](https://lgtm-kinako.com/)  
-- 🔧 [フロントリポジトリ](https://github.com/Kazuya-Sakamoto/lgtm-kinako)  
+- 💻 [フロントリポジトリ](https://github.com/Kazuya-Sakamoto/lgtm-kinako)  
 
 ## 環境構築
 
