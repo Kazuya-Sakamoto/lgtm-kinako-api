@@ -20,7 +20,7 @@
   <img src="https://img.shields.io/badge/Watch-UptimeRobot-2ECC71?logo=uptimerobot&logoColor=white" alt="UptimeRobot">
 </div>
 
-## 概要
+## Overview
 
 This is a service that allows you to share LGTM images featuring Kinako (my beloved dog). By clicking on an image, the corresponding Markdown code is copied, making it easy to use.
 
