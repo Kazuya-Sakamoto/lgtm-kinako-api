@@ -22,20 +22,20 @@
 
 ## 概要
 
-きなこ（愛犬）の LGTM 画像を共有出来るサービスです。画像をクリックすると Markdown がコピーされ使用することができます。
+This is a service that allows you to share LGTM images featuring Kinako (my beloved dog). By clicking on an image, the corresponding Markdown code is copied, making it easy to use.
 
-- 🌐 [サービス URL](https://lgtm-kinako.com/)  
-- 💻 [フロントリポジトリ](https://github.com/Kazuya-Sakamoto/lgtm-kinako)  
+- 🌐 [service URL](https://lgtm-kinako.com/)  
+- 💻 [frontend repository](https://github.com/Kazuya-Sakamoto/lgtm-kinako)  
 
-## 環境構築
+## Environment Setup
 
-- コンテナ起動
+- Start the Container
 
 ```bash
 $ make up
 ```
 
-- path の追加
+- Add Paths
 
 ```bash
 $ nano ~/.zshrc
@@ -47,26 +47,26 @@ export GOPATH=$HOME/go
 export PATH=$PATH:$GOPATH/bin
 ```
 
-- ~/.zshrc を読み込み直す
+- Reload ~/.zshrc
 
 ```bash
 $ source ~/.zshrc
 ```
 
-- 不要な依存関係の削除 / 必要な依存関係の追加
+- Remove Unnecessary Dependencies / Add Required Dependencies
 
 ```bash
 $ go mod tidy
 ```
 
-- air と dlv のコマンドが実行できるか確認
+- Verify air and dlv Commands
 
 ```bash
 $ air -v
 $ dlv -h
 ```
 
-- air と dlv をインストールしていない場合は以下でインストール
+- Install air and dlv if Not Already Installed
 
 ```bash
 $ go install github.com/cosmtrek/air@latest
@@ -76,19 +76,19 @@ $ go install github.com/cosmtrek/air@latest
 $ go install github.com/go-delve/delve/cmd/dlv@latest
 ```
 
-- マイグレーション
+- Run Migrations
 
 ```bash
 $ make migration
 ```
 
-- 起動
+- Start the Application
 
 ```bash
 $ make dev
 ```
 
-- 動作確認
+- Verify Functionality
 
 ```bash
 $ curl http://localhost:8081/api/v1/albums
@@ -98,16 +98,16 @@ $ curl http://localhost:8081/api/v1/albums
 
 ## Tips
 
-- うまく起動しない時
+- If the Application Fails to Start
 
 ```bash
 $ make down
 $ make up
 ```
 
-## その他ドキュメント
+## Additional Documentation
 
-こちらは閲覧権限が限られています。@Kazuya-Sakamoto に権限依頼をお願いします 🙇‍♂️
+Access to this documentation is restricted. Please contact @Kazuya-Sakamoto to request access. 🙇‍♂️
 
 - [planetscale でデプロイ方法](https://www.notion.so/planetscale-c49789ce45c741f495a5861312592a21)
 - [【Sequel Ace】MySQL GUI クライアントアプリの接続方法](https://www.notion.so/Sequel-Ace-MySQL-GUI-b5f8159e78f043a1beec7d083116da44)
