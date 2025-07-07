@@ -1,4 +1,4 @@
-<img src="https://d18g0hf2wnz3gs.cloudfront.net/20240413001121.JPG" alt="LGTM Image" width="830">
+<img src="https://lgtm-kinako.s3.ap-northeast-1.amazonaws.com/20240413001121.JPG" alt="LGTM Image" width="830">
 
 # lgtm-kinako-api
 
@@ -24,7 +24,6 @@
 
 This is a service that allows you to share LGTM images featuring Kinako (my beloved dog). By clicking on an image, the corresponding Markdown code is copied, making it easy to use.
 
-- 🌐 [service URL](https://lgtm-kinako.com/)  
 - 💻 [frontend repository](https://github.com/Kazuya-Sakamoto/lgtm-kinako)  
 
 ## Environment Setup
